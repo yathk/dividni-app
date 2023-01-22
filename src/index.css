@@ -1,3 +1,10 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,20 +14,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-color: var(--bg);
-  box-sizing: border-box;
 }
 
 :root {
   --bg: #2E313A;
   --nav-bar-colour: black;
   --text-colour: white;
-  --nav-size: 40px;
+  --nav-size: 8vh;
   --input-field-border: 1px solid rgb(85, 85, 85);
   --border: 1px solid black;
-
   
-  margin: 0;
-  padding: 0;
 }
 
 ul {
@@ -32,54 +35,13 @@ a {
   text-decoration: none;
 }
 
-.navbar {
-  position: fixed;
-  background-color: var(--nav-bar-colour);
-  height: var(--nav-size);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 20px;
-  width: 100%;
-  top: 0;
+.page-content-container {
+  width: calc(100% - 250px);
+  margin-top: 8vh;
+  padding: 80px;
 }
 
-.logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 60px;
-  margin-left: 5%;
-}
-
-.logo img {
-  height: 40px;
-  width: auto;
-}
-
-.export-buttons {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 10%;
-}
-
-.nav-item{
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
-
-.ques-details {
-  padding: 20px 40px;
-  margin-top: 100px;
-}
-
-label {
+label .label-text {
   color: var(--text-colour);
   margin-right: 20px;
   font-size: 20px;
@@ -88,25 +50,41 @@ label {
 .input-field {
   font-size: 16px;
   padding: 10px;
+  border: 2px solid rgb(85, 85, 85);
   border-radius: 10px;
-  outline: none;
-  border: #4d505c;
+  margin-right: 40px;
+  background-color: white;
 }
-/* 
-.input-field:focus {
+
+.input-field:hover {
+  border: 2px solid rgb(85, 85, 85);
+  background-color: rgb(201, 201, 201);
+}
+
+#qTypeDropDown, #qTypeDropDown:hover, #qTypeDropDown:focus {
+  margin-right: 0;
+  border: none;
+}
+
+#qTypeDropDownWrapper {
+  padding-left: 0;
+}
+
+input, input:focus, select, select:focus {
+  border: none;
+  background-color: white;
   outline: none;
-  border: var(--input-field-border);
-} */
+}
 
+#titleField {
+  width: 400px;
+}
 
+#titleField:focus {
+  border: 2px solid rgb(85, 85, 85);
+}
 
-
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100%;
-  max-width: 300px;
+#qTypeDropDown {
   min-width: 200px;
-  background-color: black;
 }
+
