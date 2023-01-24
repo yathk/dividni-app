@@ -20,7 +20,7 @@ body {
   --bg: #2E313A;
   --nav-bar-colour: black;
   --text-colour: white;
-  --nav-size: 8vh;
+  --nav-size: 10vh;
   --input-field-border: 1px solid rgb(85, 85, 85);
   --border: 1px solid black;
   
@@ -88,3 +88,6 @@ input, input:focus, select, select:focus {
   min-width: 200px;
 }
 
+.tinyEditor {
+  margin-top: 50px;
+}
