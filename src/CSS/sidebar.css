@@ -1,3 +1,5 @@
+@import "navbar.css";
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -5,4 +7,17 @@
     height: 100%;
     width: 250px;
     background-color: black;
+  }
+
+  .sidebar-item {
+    margin-top: calc(var(--nav-size) + 50px);
+    padding: 20px;
+  }
+
+  .sidebar-item:hover {
+    background-color: #2e2e2e;
+  }
+
+  .sidebar-item span {
+    color: white;
   }

@@ -91,3 +91,7 @@ input, input:focus, select, select:focus {
 .tinyEditor {
   margin-top: 50px;
 }
+
+iframe .variable {
+  color: blue;
+}
