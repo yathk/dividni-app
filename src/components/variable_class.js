@@ -36,7 +36,7 @@ class Variable {
 
     addInstance = (instanceId) => {
       if ( ! Number.isInteger(instanceId) ){
-        console.log('ERROR: instanceID must be an integer');
+        console.log('ERROR: instanceID must be an integer' + `not ${instanceId}`);
       } else if (this.#instances.includes(instanceId)) {
         console.log('ERROR: instaceID already exists.');
       } else {
