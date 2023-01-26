@@ -1,10 +1,10 @@
-class Variable {
+export class Variable {
     #title;
     #instances;
 
     constructor(title, isInEditor=false) {
       this.#title = title;
-      this.#instances = [];
+      this.#instances = new Set();
     }
 
     get title() {
@@ -26,21 +26,16 @@ class Variable {
     }
 
     removeInstance = (instanceId) => {
-      const index = this.#instances.indexOf(instanceId);
-      if (index > -1) {
-        this.#instances.splice(index, index);
-      } else {
-        console.log("ERROR: instanceId not found in variable.")
+      if (!this.#instances.delete(instanceId)) {
+        console.log(`ERROR: instance ${instanceId} not found in variable.`)
       }
     }
 
     addInstance = (instanceId) => {
       if ( ! Number.isInteger(instanceId) ){
-        console.log('ERROR: instanceID must be an integer' + `not ${instanceId}`);
-      } else if (this.#instances.includes(instanceId)) {
-        console.log('ERROR: instaceID already exists.');
+        console.log(`ERROR: instance ${instanceId} is not an integer`);
       } else {
-        this.#instances.push(instanceId);
+        this.#instances.add(instanceId);
       }
     }
 

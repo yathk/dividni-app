@@ -1,3 +1,5 @@
+import { SAVED_VARIABLES } from '../App.js'
+
 export default function SideBar(props) {
   return (
     <div className='sidebar'>
