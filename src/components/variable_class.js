@@ -1,10 +1,18 @@
+let NEXT_ID = 0
+
 export class Variable {
+    #id;
     #title;
     #instances;
 
-    constructor(title, isInEditor=false) {
+    constructor(title) {
+      this.#id = NEXT_ID++;
       this.#title = title;
       this.#instances = new Set();
+    }
+
+    get id() {
+      return this.#id;
     }
 
     get title() {
@@ -14,8 +22,6 @@ export class Variable {
     set title(newTitle) {
       if ( ! (typeof newTitle === 'string' || newTitle instanceof String) ) {
         console.log("ERROR: Variable title must be a string!");
-      } else if (newTitle.includes(' ')) {
-        console.log("ERROR: Variable names can't have spaces!")
       } else {
         this.#title = newTitle;
       }
@@ -51,8 +57,8 @@ export class Variable {
 export class Choice extends Variable {
   #choices;
 
-  constructor(title, isInEditor) {
-    super(title, isInEditor);
+  constructor(title) {
+    super(title);
     this.#choices = [];
   }
 
