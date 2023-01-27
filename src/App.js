@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import { parse, v4 as uuidv4 } from 'uuid';
 
 import './index.css';
 import './CSS/sidebar.css';
@@ -13,10 +12,10 @@ import { Choice } from './components/variable_class.js'
 import { VariablesDataStore } from './components/datastore.js';
 
 const VAR_DECORATOR = '@';
-const dataStore = new VariablesDataStore();
+const DATA_STORE = new VariablesDataStore();
 
 // Helper
-function delay(time) {
+const delay = (time) => {
   return new Promise(resolve => setTimeout(resolve, time));
 }
 
@@ -43,8 +42,8 @@ function QuestionEditor() {
   // check all vars and update internal state
   const parseVars = () => {
     const contentHtml = editorRef.current.getDoc()
-    dataStore.syncInstances(contentHtml);
-    dataStore.logVariables();
+    DATA_STORE.syncInstances(contentHtml);
+    DATA_STORE.logVariables();
   }
 
   const assignIds = () => {
@@ -73,13 +72,11 @@ function QuestionEditor() {
           contextmenu: false,
           formats: variableFormat,
           setup: (editor) => {
-            // parse variables on every keyboard input
-            // wait 500ms for content to finish updating
-            editor.on('input', (e) => {
-              delay(500).then( () => {
-                assignIds()
-                parseVars();
-                })
+            // Dirty event is fired any time editor changes from previous save.
+            editor.on('Dirty', (e) => {
+              assignIds()
+              parseVars();
+              editor.save();
             });
           },
           // TODO: Maybe implement this on input listener for more flexibility.
@@ -101,23 +98,11 @@ function QuestionEditor() {
       />
       <button onClick={() => console.log(editorRef.current.getContent())}>Log editor content</button>
     </>
-
   )
 }
 
 
-
-
-
-
-
-
-
-
-
 function App() {
-
-
   return (
     <div className="App">
       {/* <SideBar /> */}
