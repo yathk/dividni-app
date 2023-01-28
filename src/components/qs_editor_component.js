@@ -1,14 +1,24 @@
 import { Editor } from '@tinymce/tinymce-react';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useMemo } from 'react';
 
 
-export function QuestionEditor({datastore: DATASTORE, varDecorator: VAR_DECORATOR}) {
+export const questionEditor =
+    
+    function QuestionEditor(props) {
+
+    const {
+        datastore: DATASTORE, 
+        varDecorator: VAR_DECORATOR,
+        handleDataChange: handleDataChange
+    } = props
+
+
     const editorRef = useRef(null);
     const varInstanceCount = useRef(0);
     const variableFormat = 
     {
       'custom-variable-style': {
-        inline: 'button',
+        inline: 'span',
         wrapper: true,
         styles: {
           'color': '#c2c2c2',
@@ -25,12 +35,12 @@ export function QuestionEditor({datastore: DATASTORE, varDecorator: VAR_DECORATO
     const parseVars = () => {
       const contentHtml = editorRef.current.getDoc()
       DATASTORE.syncInstances(contentHtml);
-      DATASTORE.logVariables();
+      handleDataChange();
     }
   
     const assignIds = () => {
         const editor = editorRef.current
-        const domVars = editor.dom.select('button.variable');
+        const domVars = editor.dom.select('span.variable');
   
         const varIds = [];
         domVars.forEach( v => {
@@ -63,7 +73,6 @@ export function QuestionEditor({datastore: DATASTORE, varDecorator: VAR_DECORATO
                 assignIds()
                 parseVars();
                 editor.save();
-                // console.log(editor.getContent());
               });
             },
 
@@ -86,4 +95,3 @@ export function QuestionEditor({datastore: DATASTORE, varDecorator: VAR_DECORATO
       </>
     )
   }
-  

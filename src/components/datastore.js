@@ -42,6 +42,8 @@ export class VariablesDataStore {
     }
   }
 
+  getAllVariables = () => [...this.savedVariables]
+
   syncInstances = (htmlDoc) => {
     // delete extra instances
     this.savedVariables.forEach((sv) => {

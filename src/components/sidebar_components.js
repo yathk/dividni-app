@@ -1,9 +1,21 @@
-export default function SideBar(props) {
+import {useEffect} from 'react';
+
+export default function SideBar({
+  datastore,
+  handleDataUpdated
+}) {
+  useEffect(() => handleDataUpdated());
+
+  const variables = datastore.getAllVariables();
+  const displayList = variables.map( v =>
+    <SideBarItem key={v.id} name={v.title}/> 
+  );
+  
   return (
     <div className='sidebar'>
-      <SideBarItem
-        id='@1'
-        name='Distractor' />
+      <div className='sidebar-content'>
+        {displayList}
+      </div>
     </div>
   )
 }
@@ -11,7 +23,6 @@ export default function SideBar(props) {
 function SideBarItem(props) {
   return (
     <div className='sidebar-item'>
-      <span className='var-id'>{props.id}</span>
       <span>{props.name}</span>
     </div>
   )

@@ -9,15 +9,20 @@
     background-color: black;
   }
 
-  .sidebar-item {
-    margin-top: calc(var(--nav-size) + 50px);
-    padding: 20px;
+  .sidebar-content {
+    margin-top: calc(var(--nav-size) + 20px);
   }
 
-  .sidebar-item:hover {
-    background-color: #2e2e2e;
-  }
+    .sidebar-item {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
 
-  .sidebar-item span {
-    color: white;
-  }
+    .sidebar-item:hover {
+      background-color: #2e2e2e;
+    }
+
+    .sidebar-item span {
+      color: white;
+    }
