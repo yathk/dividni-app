@@ -62,7 +62,7 @@ export const questionEditor =
             editorRef.current = editor
             }}
           init={{
-            height: 500,
+            height: 300,
             menubar: false,
             browser_spellcheck: true,
             contextmenu: false,

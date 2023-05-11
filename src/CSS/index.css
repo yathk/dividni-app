@@ -19,11 +19,12 @@ body {
 :root {
   --bg: #2E313A;
   --nav-bar-colour: black;
-  --text-colour: white;
   --nav-size: 10vh;
-  --input-field-border: 1px solid rgb(85, 85, 85);
+  --sidebar-width: 250px;
+  --text-colour: white;
+  --input-field-border: 1px solid rgb(168, 167, 167);
   --border: 1px solid black;
-  
+  /* --input-field-border: 1px solid rgb(215, 215, 215); */
 }
 
 ul {
@@ -92,6 +93,8 @@ input, input:focus, select, select:focus {
   margin-top: 50px;
 }
 
-iframe .variable {
-  color: blue;
+footer {
+  position: fixed;
+  bottom: 0;
+  padding: 20px;
 }

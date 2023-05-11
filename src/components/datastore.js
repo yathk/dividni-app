@@ -42,6 +42,14 @@ export class VariablesDataStore {
     }
   }
 
+  getVariableById = (varId) => {
+    for (const v of this.savedVariables) {
+      if (parseInt(varId) === v.id) {
+        return v;
+      }
+    }
+  }
+
   getAllVariables = () => [...this.savedVariables]
 
   syncInstances = (htmlDoc) => {

@@ -1,28 +1,126 @@
-@import "navbar.css";
+@import "../CSS/index.css";
 
 .sidebar {
     position: fixed;
     top: 0;
     right: 0;
     height: 100%;
-    width: 250px;
+    width: var(--sidebar-width);
     background-color: black;
+    margin-top: var(--nav-size);
+    z-index: 2;
   }
 
-  .sidebar-content {
-    margin-top: calc(var(--nav-size) + 20px);
-  }
 
     .sidebar-item {
       padding: 20px;
+      padding-left: 30px;
       display: flex;
-      justify-content: center;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
     .sidebar-item:hover {
       background-color: #2e2e2e;
     }
 
-    .sidebar-item span {
+    .sidebar-item .var-name {
+      border: 1px solid transparent;
+      width: 160px;
+      color: white;
+      line-height: 1;
+      padding: 5px;
+    }
+    
+    .sidebar-item .var-name:hover {
+      border: 1px solid white;
+    }
+
+    .sidebar-item .var-name-input {
+      width: 160px;
+      line-height: 1;
+      padding: 5px;
+      display: inline;
+    }
+
+
+
+
+    .sidebar-header {
+      height: 60px;
+    }
+    
+    .sidebar-header:hover {
+      background-color: #2e2e2e;
+    }
+
+    .sidebar-header:active {
+      background-color: rgb(75, 75, 75);
+    }
+
+    .add-var-btn {
+      background-color: transparent;
+      border: none;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .add-var-btn span {
+      color: white;
+      font-size: 18px;
+      line-height: 18px;
+      margin-left: 10px;
+    }
+
+    .add-var-icon {
       color: white;
     }
+
+    .var-config-icon {
+      color: white;
+      padding: 5px;
+    }
+
+    .var-settings-dialog {
+      background-color: white;
+      /* font-size: 14px; */
+
+      min-height: 300px;
+      width: 400px;
+      position: fixed;
+      right: calc(var(--sidebar-width) + 5px);
+      z-index: 10;
+      border: var(--input-field-border);
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+      #formVarType {
+        margin-bottom: 20px;
+      }
+
+    /* .settings-container {
+      max-width: 100%;
+    } */
+      /* .var-settings-dialog label span {
+        display: inline;
+        color:rgb(75, 75, 75);
+        vertical-align: middle;
+      }
+      
+      .var-settings-label {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+      }
+
+  
+
+      .var-settings-dropdown, .var-settings-dropdown:focus, .var-settings-dropdown:active {
+        border: var(--input-field-border);
+        padding: 5px;
+        justify-self: stretch;
+      } */

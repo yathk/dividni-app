@@ -1,6 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import './index.css';
+
+import './CSS/index.css';
 import './CSS/sidebar.css';
 import './CSS/navbar.css';
 
@@ -13,36 +15,42 @@ import { VariablesDataStore } from './components/datastore.js';
 
 const VAR_DECORATOR = '@';
 const DATA_STORE = new VariablesDataStore();
+DATA_STORE.addVariable(new Choice('my variable'))
+DATA_STORE.addVariable(new Choice('name'))
 
 
 function App() {
   const [dataDirty, setDataDirty] = useState(true);
-  DATA_STORE.logVariables();
 
   return (
+    
     <div className="App">
-      <SideBar
-        datastore={DATA_STORE}
-        handleDataUpdated={() => setDataDirty(false)}
-      />
-
-      <div className='page-content-container'>
-        <div className='ques-details'>
-          <QDetails />
-        </div>
-        <div className='tinyEditor'>
-          <QuestionEditor
+      <header>
+        <Navbar>
+        </Navbar>
+      </header>
+      <main>
+        <div className='page-content-container'>
+          <SideBar
             datastore={DATA_STORE}
-            varDecorator={VAR_DECORATOR}
+            handleDataUpdated={() => setDataDirty(false)}
             handleDataChange={() => setDataDirty(true)}
           />
-        </div>
+          <div className='ques-details'>
+            <QDetails />
+          </div>
+          <div className='tinyEditor'>
+            <QuestionEditor
+              datastore={DATA_STORE}
+              varDecorator={VAR_DECORATOR}
+              handleDataChange={() => setDataDirty(true)}
+            />
+          </div>
 
-      </div>
-      <Navbar>
-        <NavItem icon='save' />
-        <NavItem icon='export' />
-      </Navbar>
+        </div>
+      </main>
+      <footer>
+      </footer>
     </div>
   );
 }
