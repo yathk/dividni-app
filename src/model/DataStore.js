@@ -1,4 +1,4 @@
-import {Choice, Variable} from './variable_class.js';
+import {Choice, Variable} from './Variable.js';
 
 // Helper
 function checkVarType(newVar) {

@@ -6,12 +6,12 @@ import './CSS/index.css';
 import './CSS/sidebar.css';
 import './CSS/navbar.css';
 
-import SideBar from './components/sidebar_components';
-import { Navbar, NavItem } from './components/navbar_components';
-import { QDetails } from './components/qDetails_components';
-import { questionEditor as QuestionEditor } from './components/qs_editor_component';
-import { Choice } from './components/variable_class.js'
-import { VariablesDataStore } from './components/datastore.js';
+import SideBar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import QDetails from './components/QDetails';
+import QuestionEditor from './components/QuestionEditor';
+import { Choice } from './model/Variable'
+import { VariablesDataStore } from './model/DataStore.js';
 
 const VAR_DECORATOR = '@';
 const DATA_STORE = new VariablesDataStore();

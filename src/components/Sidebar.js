@@ -45,7 +45,7 @@ export default function SideBar({
       
       handleVarRenamed={handleVarRenamed}
       varIdBeingRenamed={varIdBeingRenamed}
-      setVarIdBeingRenamed={setVarIdBeingRenamed}
+      // setVarIdBeingRenamed={setVarIdBeingRenamed}
 
       handleVarChanged = {handleVarChanged}
       varIdBeingChanged={varIdBeingChanged}

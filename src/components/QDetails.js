@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class QDetails extends React.Component {
+export default class QDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

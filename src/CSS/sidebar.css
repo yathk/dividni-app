@@ -32,9 +32,9 @@
       padding: 5px;
     }
     
-    .sidebar-item .var-name:hover {
+    /* .sidebar-item .var-name:hover {
       border: 1px solid white;
-    }
+    } */
 
     .sidebar-item .var-name-input {
       width: 160px;
