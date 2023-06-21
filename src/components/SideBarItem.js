@@ -1,9 +1,11 @@
+import { useState } from 'react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid, regular } from '@fortawesome/fontawesome-svg-core/import.macro'
-import ChoiceVariableSettings from './ChoiceVariableSettings'
+import SettingsDialog from './varSettings/SettingsDialog'
 
 function SideBarItem({ id, name,
-  // setVarIdBeingRenamed,
+  setVarIdBeingRenamed,
   varIdBeingRenamed,
   handleVarRenamed,
 
@@ -12,30 +14,29 @@ function SideBarItem({ id, name,
   setVarIdBeingChanged
 }) {
 
-  let varNameField;
-    varNameField =
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // const handleVarClicked = (e, varId) => {
+  // }
+
+  return (
+    <div
+      className='sidebar-item'
+      onClick={() => setIsDialogOpen(true)}
+    >
+      <SettingsDialog varId={id} open={isDialogOpen} setOpen={setIsDialogOpen}/>
       <span
         id={id}
         className='var-name'
       >
         {name}
       </span>
-
-
-  let isShowSettings = varIdBeingChanged === id
-
-  return (
-    <div 
-      className='sidebar-item'
-      onClick={() => alert("clicked")}
-    >
-      {varNameField}
       <FontAwesomeIcon
         onClick={() => setVarIdBeingChanged(id)}
         className='var-config-icon'
         icon={solid('gear')}
       />
-      {isShowSettings && <ChoiceVariableSettings />}
+      {/* {isShowSettings && <ChoiceVariableSettings />} */}
     </div>
   )
 }

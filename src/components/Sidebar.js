@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid, regular } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 import SideBarItem from './SideBarItem';
+import ChoiceDialog from './varSettings/SettingsDialog';
 
 export default function SideBar({
   datastore,
@@ -19,6 +20,8 @@ export default function SideBar({
   const [varIdBeingChanged, setVarIdBeingChanged] = useState(null);
 
   
+
+
   // Handler for when new name is entered
   const handleVarRenamed = (e) => {
     if (e.key == 'Enter') {
@@ -65,8 +68,6 @@ export default function SideBar({
     </div>
   )
 }
-
-
 
 
 function SidebarHeader(props) {
