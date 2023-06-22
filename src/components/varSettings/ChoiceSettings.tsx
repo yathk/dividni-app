@@ -1,10 +1,11 @@
 import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
 
-import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Typography } from '@mui/material'
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Typography } from '@mui/material'
 import { settingsProps } from './SettingsDialog'
 import { Choice, Variable } from '../../model/Variable.js'
 import { DataStoreContext } from '../../App'
 import { Stack } from 'react-bootstrap'
+import CloseIcon from '@mui/icons-material/Close';
 
 interface choiceSettingsProps extends settingsProps {
   variable: Choice
@@ -43,6 +44,19 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
     }
   }
 
+  const handleAddVar = () => {
+    choices.push({
+      value: "",
+      errText: ""
+    })
+    setChoices([...choices])
+  }
+
+  const handleRemoveVar = (index: number) => {
+    choices.splice(index, 1)
+    setChoices([...choices])
+  }
+
   // Add validation
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
     choices[index].value = e.target.value
@@ -51,7 +65,8 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
 
   const handleSave = () => {
     variable.title = title
-    variable.choices = choices.map(c => c.value)
+    // Remove empty choices
+    variable.choices = choices.filter(c => !!c.value).map(c => c.value)
     setDataDirty(true)
     setOpen(false)
   }
@@ -106,9 +121,21 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
                 helperText={choice.errText}
                 error={!!choice.errText}
               />
+              <IconButton
+                color='primary'
+                onClick={() => handleRemoveVar(index)}
+              >
+                <CloseIcon />
+              </IconButton>
             </Stack>
           ))
         }
+        <Button
+          variant='text'
+          onClick={handleAddVar}
+        >
+          Add more
+        </Button>
 
       </DialogContent>
 
@@ -121,7 +148,7 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
         >
           Cancel
         </Button>
-        <Button 
+        <Button
           onClick={handleSave}
           sx={{
             textTransform: 'none'
