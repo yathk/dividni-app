@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid, regular } from '@fortawesome/fontawesome-svg-core/import.macro'
+
 
 import SideBarItem from './SideBarItem';
-import ChoiceDialog from './varSettings/SettingsDialog';
 
 export default function SideBar({
   datastore,
@@ -23,16 +21,14 @@ export default function SideBar({
   }
 
   const variables = datastore.getAllVariables();
-  const displayList = variables.map(v =>
+  const displayList = variables.map((v, index) =>
     <SideBarItem
-      key={v.id}
+      key={index}
       name={v.title}
       id={v.id}
     />
   );
-  if (isAddNewVar) {
-    displayList.push(<SideBarItem key='25' name='hello' />)
-  }
+
   return (
     <div className='sidebar'>
       {/* <SidebarHeader onclick={() => setIsAddNewVar(true)} /> */}
@@ -43,14 +39,5 @@ export default function SideBar({
   )
 }
 
-function SidebarHeader(props) {
-  return (
-    <div className='sidebar-header'>
-      <button className='add-var-btn' onClick={() => props.onclick()}>
-        <FontAwesomeIcon className='add-var-icon' icon={solid('plus')} size='xl' />
-        <span>add new</span>
-      </button>
-    </div>
-  )
-}
+
 

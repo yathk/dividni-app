@@ -40,6 +40,7 @@ export class VariablesDataStore {
         return v;
       }
     }
+    return null
   }
 
   getVariableById = (varId) => {
@@ -64,14 +65,15 @@ export class VariablesDataStore {
     // add remaining instances
     const variablesHtml = Array.from(htmlDoc.getElementsByClassName('variable'));
     variablesHtml.forEach((varHtml) => {
-      const varId = parseInt(varHtml.getAttribute('id'));
+      const instanceId = parseInt(varHtml.getAttribute('id'));
       const varName = varHtml.innerText;
       const retrivedVar = this.getVariable(varName);
       if (retrivedVar) {
-        retrivedVar.addInstance(varId);
+        retrivedVar.addInstance(instanceId);
       } else {
-        const newVar = new Choice(varName);
-        newVar.addInstance(varId);
+        const varId = parseInt(varHtml.getAttribute('varId'));
+        const newVar = new Choice(varName, varId);
+        newVar.addInstance(instanceId);
         this.addVariable(newVar);
       }
     })

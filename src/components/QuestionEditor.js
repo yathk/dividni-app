@@ -1,26 +1,30 @@
 import { Editor } from '@tinymce/tinymce-react';
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, forwardRef } from 'react';
 
 
-export default function QuestionEditor(props) {
+export default forwardRef(function QuestionEditor(props, ref) {
 
   const {
     datastore: DATASTORE,
     varDecorator: VAR_DECORATOR,
-    handleDataChange: handleDataChange
+    handleDataChange: handleDataChange,
   } = props
 
 
-  const editorRef = useRef(null);
+  const editorRef = ref;
   const varInstanceCount = useRef(0);
-  const variableFormat =
-  {
+  const varIdCount = useRef(0);
+
+  console.log("rerendered")
+
+  const variableFormat = {
     'custom-variable-style': {
       inline: 'span',
       wrapper: true,
       styles: {
         'color': '#c2c2c2',
-        'font-weight': 'bold'
+        'font-weight': 'bold',
+        'border': '1px solid #c2c2c2'
       },
       attributes: {
         'class': 'variable',
@@ -36,16 +40,33 @@ export default function QuestionEditor(props) {
     handleDataChange();
   }
 
+  const getVarId = (varTitle) => {
+    const variable = DATASTORE.getVariable(varTitle)
+    let output = -1
+    if (variable) {
+      output = variable.id
+    } else {
+      output = varIdCount.current++
+    }
+    return output
+  }
+
   const assignIds = () => {
     const editor = editorRef.current
     const domVars = editor.dom.select('span.variable');
 
-    const varIds = [];
+    // holds ids for this parse.
+    const instanceIds = [];
     domVars.forEach(v => {
-      const id = v.getAttribute('id');
-      if (id && !varIds.includes(id)) {
-        varIds.push(id);
-      } else if (!id || varIds.includes(id)) {
+      v.innerHTML = v.innerHTML.trim()
+      // Setting varId
+      v.setAttribute('varId', '' + getVarId(v.innerHTML))
+
+      // Setting instanceId
+      const instanceId = v.getAttribute('instanceId');
+      if (instanceId && !instanceIds.includes(instanceId)) {
+        instanceIds.push(instanceId);
+      } else if (!instanceId || instanceIds.includes(instanceId)) {
         v.setAttribute('id', '' + varInstanceCount.current++);
         v.setAttribute('tabindex', "-1")
       }
@@ -65,17 +86,27 @@ export default function QuestionEditor(props) {
           browser_spellcheck: true,
           contextmenu: false,
           formats: variableFormat,
+          extended_valid_elements: 'span[id|style|class|instanceId|varId]',
           setup: (editor) => {
+
+            // Fired to sync instances to datasore
+            editor.addCommand('renameInstances', (ui, value) => {
+              console.log(`renaming variable ${value}`)
+              const variable = DATASTORE.getVariableById(value)
+              variable.instances.forEach(instanceId => {
+                editorRef.current.getDoc().getElementById('' + instanceId).innerHTML = variable.title
+              })
+            })
+
             // Dirty event is fired any time editor changes from previous save.
             editor.on('Dirty', (e) => {
-              assignIds()
+              assignIds();
               parseVars();
               editor.save();
             });
           },
-
           text_patterns: [
-            { start: VAR_DECORATOR, end: VAR_DECORATOR, format: 'custom-variable-style' },
+            { start: VAR_DECORATOR, end: VAR_DECORATOR, format: 'custom-variable-style'},
           ],
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
@@ -89,7 +120,7 @@ export default function QuestionEditor(props) {
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
         }}
       />
-      <button onClick={() => console.log(editorRef.current.getContent())}>Log editor content</button>
+      <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button>
     </>
   )
-}
+})

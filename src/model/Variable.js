@@ -5,8 +5,8 @@ export class Variable {
     #title;
     #instances;
 
-    constructor(title) {
-      this.#id = NEXT_ID++;
+    constructor(title, id) {
+      this.#id = id;
       this.#title = title;
       this.#instances = new Set();
     }
@@ -57,8 +57,8 @@ export class Variable {
 export class Choice extends Variable {
   #choices;
 
-  constructor(title) {
-    super(title);
+  constructor(title, id) {
+    super(title, id);
     this.#choices = [];
   }
 

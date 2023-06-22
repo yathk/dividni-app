@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -27,13 +27,13 @@ export const DataStoreContext = createContext();
 
 function App() {
   const [dataDirty, setDataDirty] = useState(true);
+  const qEditor = useRef(null);
 
   return (
     <div className="App">
-      <DataStoreContext.Provider value={{DATA_STORE, dataDirty, setDataDirty}}>
+      <DataStoreContext.Provider value={{DATA_STORE, dataDirty, setDataDirty, qEditor}}>
         <header>
-          <Navbar>
-          </Navbar>
+          <Navbar/>
         </header>
         <main>
           <div className='page-content-container'>
@@ -47,6 +47,7 @@ function App() {
             </div>
             <div className='tinyEditor'>
               <QuestionEditor
+                ref={qEditor}
                 datastore={DATA_STORE}
                 varDecorator={VAR_DECORATOR}
                 handleDataChange={() => setDataDirty(true)}

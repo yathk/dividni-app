@@ -13,7 +13,7 @@ interface choiceSettingsProps extends settingsProps {
 
 export default function ChoiceSettings({ open, setOpen, variable }: choiceSettingsProps) {
 
-  const { dataDirty, setDataDirty, DATA_STORE } = useContext(DataStoreContext)
+  const { dataDirty, setDataDirty, DATA_STORE, qEditor } = useContext(DataStoreContext)
 
   const [title, setTitle] = useState(variable.title)
   const [titleErr, setTitleErr] = useState("")
@@ -65,6 +65,7 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
 
   const handleSave = () => {
     variable.title = title
+    qEditor.current.execCommand('renameInstances', undefined, variable.id)
     // Remove empty choices
     variable.choices = choices.filter(c => !!c.value).map(c => c.value)
     setDataDirty(true)
