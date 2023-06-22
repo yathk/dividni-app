@@ -62,13 +62,21 @@ export class Choice extends Variable {
     this.#choices = [];
   }
 
+  set choices(newChoices) {
+    this.#choices = newChoices
+  }
+
+  getChoices = () => {
+    return [...this.#choices]
+  }
+
   addChoice = (choiceToAdd) => {
     if ( ! (typeof choiceToAdd === 'string' || choiceToAdd instanceof String) ) {
       console.log("ERROR: Choice value must be a string!");
     } else if ( this.#choices.includes(choiceToAdd) ) {
       console.log("ERROR: Choice value already exists!");
     } else {
-      this.#choices.add(choiceToAdd);
+      this.#choices.push(choiceToAdd);
     }
   }
 

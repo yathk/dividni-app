@@ -10,12 +10,17 @@ import SideBar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import QDetails from './components/QDetails';
 import QuestionEditor from './components/QuestionEditor';
-import { Choice } from './model/Variable'
+import { Choice } from './model/Variable.js'
 import { VariablesDataStore } from './model/DataStore.js';
 
 const VAR_DECORATOR = '@';
 const DATA_STORE = new VariablesDataStore();
-DATA_STORE.addVariable(new Choice('my variable'))
+
+
+const tempVar = new Choice('my variable')
+tempVar.addChoice("test1")
+tempVar.addChoice("test2")
+DATA_STORE.addVariable(tempVar)
 DATA_STORE.addVariable(new Choice('name'))
 
 export const DataStoreContext = createContext();
@@ -25,7 +30,7 @@ function App() {
 
   return (
     <div className="App">
-      <DataStoreContext.Provider value={DATA_STORE}>
+      <DataStoreContext.Provider value={{DATA_STORE, dataDirty, setDataDirty}}>
         <header>
           <Navbar>
           </Navbar>
