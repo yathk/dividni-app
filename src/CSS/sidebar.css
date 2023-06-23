@@ -18,6 +18,7 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      align-items: center;
     }
 
     .sidebar-item:hover {
@@ -31,6 +32,7 @@
       color: white;
       line-height: 1;
       padding: 5px;
+      vertical-align: middle;
     }
     
     /* .sidebar-item .var-name:hover {
@@ -39,7 +41,7 @@
 
     .sidebar-item .var-name-input {
       width: 160px;
-      line-height: 1;
+      /* line-height: 1; */
       padding: 5px;
       display: inline;
     }

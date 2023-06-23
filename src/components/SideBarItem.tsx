@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid, regular } from '@fortawesome/fontawesome-svg-core/import.macro'
 import SettingsDialog from './varSettings/SettingsDialog'
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions } from '@mui/material';
-import { Button } from 'react-bootstrap';
+import { Dialog, DialogTitle, DialogContent, Button, TextField, DialogActions, IconButton, Typography, Box } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { DataStoreContext } from '../App';
+
 
 interface SideBarItemProps {
   id: number,
@@ -14,10 +14,16 @@ interface SideBarItemProps {
 function SideBarItem({ id, name,
 }: SideBarItemProps) {
 
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  const handleOpen = () => {
-    setIsDialogOpen(true)
+  const { DATA_STORE, setDataStore, qEditor } = useContext(DataStoreContext);
+
+  const handleDelete = () => {
+    qEditor.current.execCommand('removeInstances', undefined, id)
+    DATA_STORE.removeVariable(name);
+    setDataStore({...DATA_STORE})
+    setIsConfirmOpen(false);
   }
 
   return (
@@ -27,22 +33,64 @@ function SideBarItem({ id, name,
         open={isDialogOpen}
         setOpen={setIsDialogOpen}
       />
+
+      <Dialog
+        open={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        fullWidth
+        maxWidth={"sm"}
+        PaperProps={{
+          sx: {
+            p: 2
+          }
+        }}
+      >
+        <DialogTitle>Remove "{name}"?</DialogTitle>
+        <DialogContent>
+          <Typography fontWeight={500}>This will remove all mentions of the variable from the question editor.</Typography>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() => setIsConfirmOpen(false)}
+            variant='text'
+            color='error'
+          >
+            No
+          </Button>
+          <Button
+            variant='text'
+            onClick={handleDelete}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+
       <div
         className='sidebar-item'
-        onClick={handleOpen}
       >
-        <span
-          id={"" + id}
-          className='var-name'
+        <Box
+          height={'100%'}
+          onClick={() => setIsDialogOpen(true)}
         >
-          {name}
-        </span>
-        {/* <FontAwesomeIcon
-          // onClick={() => setVarIdBeingChanged(id)}
-          className='var-config-icon'
-          icon={solid('gear')}
-        /> */}
+          <Typography
+            id={"" + id}
+            className='var-name'
+          >
+            {name}
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={() => setIsConfirmOpen(true)}
+        >
+          <CloseIcon sx={{ color: "white" }} />
+        </IconButton>
+
       </div>
+
     </>
   )
 }

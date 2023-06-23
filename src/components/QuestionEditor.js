@@ -1,5 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react';
-import React, { useRef, forwardRef } from 'react';
+import React, { useRef, forwardRef, useContext } from 'react';
+import { DataStoreContext } from '../App';
 
 
 export default forwardRef(function QuestionEditor(props, ref) {
@@ -10,12 +11,14 @@ export default forwardRef(function QuestionEditor(props, ref) {
     handleDataChange: handleDataChange,
   } = props
 
+  const {DATA_STORE} = useContext(DataStoreContext)
+
 
   const editorRef = ref;
   const varInstanceCount = useRef(0);
   const varIdCount = useRef(0);
 
-  console.log("rerendered")
+  // console.log("rerendered")
 
   const variableFormat = {
     'custom-variable-style': {
@@ -27,7 +30,7 @@ export default forwardRef(function QuestionEditor(props, ref) {
         'border': '1px solid #c2c2c2'
       },
       attributes: {
-        'class': 'variable',
+        'class': 'variable mceNonEditable',
         'contenteditable': 'false',
       }
     }
@@ -36,12 +39,12 @@ export default forwardRef(function QuestionEditor(props, ref) {
   // check all vars and update internal state
   const parseVars = () => {
     const contentHtml = editorRef.current.getDoc()
-    DATASTORE.syncInstances(contentHtml);
+    DATA_STORE.syncInstances(contentHtml);
     handleDataChange();
   }
 
   const getVarId = (varTitle) => {
-    const variable = DATASTORE.getVariable(varTitle)
+    const variable = DATA_STORE.getVariable(varTitle)
     let output = -1
     if (variable) {
       output = variable.id
@@ -89,12 +92,20 @@ export default forwardRef(function QuestionEditor(props, ref) {
           extended_valid_elements: 'span[id|style|class|instanceId|varId]',
           setup: (editor) => {
 
-            // Fired to sync instances to datasore
+            // Renames all instances of a variable
             editor.addCommand('renameInstances', (ui, value) => {
               console.log(`renaming variable ${value}`)
-              const variable = DATASTORE.getVariableById(value)
+              const variable = DATA_STORE.getVariableById(value)
               variable.instances.forEach(instanceId => {
                 editorRef.current.getDoc().getElementById('' + instanceId).innerHTML = variable.title
+              })
+            })
+
+            // Removes all instances of a variable
+            editor.addCommand('removeInstances', (ui, value) => {
+              const variable = DATA_STORE.getVariableById(value)
+              variable.instances.forEach(instanceId => {
+                editorRef.current.getDoc().getElementById('' + instanceId).remove()
               })
             })
 
@@ -111,7 +122,7 @@ export default forwardRef(function QuestionEditor(props, ref) {
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+            'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount', 'noneditable'
           ],
           toolbar: 'undo redo | blocks | fontsize | ' +
             'bold italic underline forecolor | alignleft aligncenter ' +

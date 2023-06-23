@@ -28,10 +28,12 @@ export class VariablesDataStore {
   }
 
   removeVariable = (varToRemove) => {
-    const index = this.savedVariables.indexOf(varToRemove)
-    if (index > -1) {
+    const variable = this.getVariable(varToRemove)
+    if (variable) {
+      const index = this.savedVariables.indexOf(variable)
       this.savedVariables.splice(index, 1)
     }
+    console.log(this.savedVariables)
   }
 
   getVariable = (varName) => {
