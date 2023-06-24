@@ -12,16 +12,15 @@ export default function McqAnswer({
 	const {DATA_STORE} = useContext(DataStoreContext);
 
 	return (
-		<Stack
-			flexDirection={'row'}
+		<div
 		>
-		<Typography sx={{color: 'white'}}>{index}:</Typography>
+			<Typography sx={{color: 'white'}}>{index}:</Typography>
 			<TinyEditor
 				idName={`answer${index}`}
 				datastore={DATA_STORE}
 				varDecorator={VAR_DECORATOR}
 				handleDataChange={() => setDataDirty(true)}
 			/>
-		</Stack>
+</div>
 	)
 }

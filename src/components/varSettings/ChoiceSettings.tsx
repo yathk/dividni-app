@@ -6,6 +6,7 @@ import { Choice, Variable } from '../../model/Variable.js'
 import { DataStoreContext } from '../../App'
 import { Stack } from 'react-bootstrap'
 import CloseIcon from '@mui/icons-material/Close';
+import tinymce from 'tinymce'
 
 interface choiceSettingsProps extends settingsProps {
   variable: Choice
@@ -13,7 +14,7 @@ interface choiceSettingsProps extends settingsProps {
 
 export default function ChoiceSettings({ open, setOpen, variable }: choiceSettingsProps) {
 
-  const { dataDirty, setDataDirty, DATA_STORE, qEditor } = useContext(DataStoreContext)
+  const { dataDirty, setDataDirty, DATA_STORE, editorIds } = useContext(DataStoreContext)
 
   const [title, setTitle] = useState(variable.title)
   const [titleErr, setTitleErr] = useState("")
@@ -65,7 +66,11 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
 
   const handleSave = () => {
     variable.title = title
-    qEditor.current.execCommand('renameInstances', undefined, variable.id)
+    editorIds.forEach((id: string) => {
+      const editor = tinymce.get(id)
+      editor && editor.execCommand('renameInstances', false, variable.id)
+    });
+
     // Remove empty choices
     variable.choices = choices.filter(c => !!c.value).map(c => c.value)
     setDataDirty(true)

@@ -1,10 +1,9 @@
-import { Editor } from '@tinymce/tinymce-react';
 import BundledEditor from '../BundledEditor';
-import React, { useRef, forwardRef, useContext } from 'react';
+import React, { useRef, useContext } from 'react';
 import { DataStoreContext } from '../App';
 
 
-export default forwardRef(function TinyEditor(props, ref) {
+export default function TinyEditor(props) {
 
   const {
     datastore: DATASTORE,
@@ -15,8 +14,7 @@ export default forwardRef(function TinyEditor(props, ref) {
 
   const {DATA_STORE} = useContext(DataStoreContext)
 
-
-  const editorRef = ref;
+  const editorRef = useRef(null);
   const varInstanceCount = useRef(0);
   const varIdCount = useRef(0);
 
@@ -87,9 +85,7 @@ export default forwardRef(function TinyEditor(props, ref) {
           editorRef.current = editor
         }}
         init={{
-          language: 'en',
           inline: true,
-          selector: 'div#qEditor',
           menubar: false,
           browser_spellcheck: true,
           contextmenu: false,
@@ -127,16 +123,16 @@ export default forwardRef(function TinyEditor(props, ref) {
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+            'insertdatetime', 'media', 'table', 'preview', 'wordcount'
           ],
           toolbar: 'undo redo | fontsize | ' +
             'bold italic underline forecolor | alignleft aligncenter ' +
             'alignright | bullist numlist outdent indent | ' +
-            'removeformat | help',
+            'removeformat',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
         }}
       />
       {/* <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button> */}
     </>
   )
-})
+}

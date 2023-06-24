@@ -18,15 +18,17 @@ function SideBarItem({ id, name,
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
-  const { DATA_STORE, setDataStore, qEditor } = useContext(DataStoreContext);
+  const { DATA_STORE, setDataStore, editorIds } = useContext(DataStoreContext);
 
   const handleDelete = () => {
-    const editor = tinymce.get('qEditor');
-    if (editor) {
-      editor.execCommand('removeInstances', false, id)
-      DATA_STORE.removeVariable(name);
-      setDataStore({...DATA_STORE})
-    }
+    editorIds.forEach((id: string) => {
+      const editor = tinymce.get(id);
+      if (editor) {
+        editor.execCommand('removeInstances', false, id)
+      }
+    })
+    DATA_STORE.removeVariable(name);
+    setDataStore({...DATA_STORE})
     setIsConfirmOpen(false);
   }
 

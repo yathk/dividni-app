@@ -32,11 +32,11 @@ export const DataStoreContext = createContext();
 function App() {
   const [dataDirty, setDataDirty] = useState(true);
   const [DATA_STORE, setDataStore] = useState(newDataStore)
-  const qEditor = useRef(null);
+  const editorIds = useRef([]);
 
   return (
     <div className="App">
-      <DataStoreContext.Provider value={{ DATA_STORE, setDataStore, dataDirty, setDataDirty, qEditor }}>
+      <DataStoreContext.Provider value={{ DATA_STORE, setDataStore, dataDirty, setDataDirty, editorIds }}>
         <ThemeProvider theme={theme}>
           <header>
             <Navbar />
@@ -57,7 +57,6 @@ function App() {
               <div className='tinyEditor'>
                 <TinyEditor
                   idName="qEditor"
-                  ref={qEditor}
                   datastore={DATA_STORE}
                   varDecorator={VAR_DECORATOR}
                   handleDataChange={() => setDataDirty(true)}
