@@ -9,11 +9,13 @@ import './CSS/navbar.css';
 import SideBar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import QDetails from './components/QDetails';
-import QuestionEditor from './components/QuestionEditor';
+import TinyEditor from './components/TinyEditor';
 import { Choice } from './model/Variable.js'
 import { VariablesDataStore } from './model/DataStore.js';
-import { ThemeProvider } from 'react-bootstrap';
+import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
+import Typography from '@mui/material/Typography'
+import McqAnswer from './components/McqAnswer';
 
 
 const VAR_DECORATOR = '@';
@@ -35,7 +37,7 @@ function App() {
   return (
     <div className="App">
       <DataStoreContext.Provider value={{ DATA_STORE, setDataStore, dataDirty, setDataDirty, qEditor }}>
-        <ThemeProvider value={theme}>
+        <ThemeProvider theme={theme}>
           <header>
             <Navbar />
           </header>
@@ -49,21 +51,36 @@ function App() {
               <div className='ques-details'>
                 <QDetails />
               </div>
+
+              <Typography variant="h2" mb={3}>Question:</Typography>
+
               <div className='tinyEditor'>
-                <QuestionEditor
+                <TinyEditor
+                  idName="qEditor"
                   ref={qEditor}
                   datastore={DATA_STORE}
                   varDecorator={VAR_DECORATOR}
                   handleDataChange={() => setDataDirty(true)}
                 />
               </div>
+
+              <Typography variant="h2" mt={4} mb={3}>Answers:</Typography>
+
+              <div className='answers'>
+                <McqAnswer
+                  index="1"
+                  VAR_DECORATOR={VAR_DECORATOR}
+                  setDataDirty={setDataDirty}
+                />
+              </div>
+
             </div>
           </main>
           <footer>
           </footer>
         </ThemeProvider>
       </DataStoreContext.Provider>
-    </div>
+    </div >
   );
 }
 

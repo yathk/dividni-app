@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import tinymce from 'tinymce/tinymce';
 
 import SettingsDialog from './varSettings/SettingsDialog'
 import { Dialog, DialogTitle, DialogContent, Button, TextField, DialogActions, IconButton, Typography, Box } from '@mui/material';
@@ -20,9 +21,12 @@ function SideBarItem({ id, name,
   const { DATA_STORE, setDataStore, qEditor } = useContext(DataStoreContext);
 
   const handleDelete = () => {
-    qEditor.current.execCommand('removeInstances', undefined, id)
-    DATA_STORE.removeVariable(name);
-    setDataStore({...DATA_STORE})
+    const editor = tinymce.get('qEditor');
+    if (editor) {
+      editor.execCommand('removeInstances', false, id)
+      DATA_STORE.removeVariable(name);
+      setDataStore({...DATA_STORE})
+    }
     setIsConfirmOpen(false);
   }
 

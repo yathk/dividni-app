@@ -8,10 +8,8 @@
     width: var(--sidebar-width);
     background-color: black;
     margin-top: var(--nav-size);
-    z-index: 2;
+    z-index: 1;
   }
-
-
     .sidebar-item {
       padding: 20px;
       padding-left: 30px;

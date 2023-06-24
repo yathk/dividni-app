@@ -93,8 +93,29 @@ input, input:focus, select, select:focus {
   min-width: 200px;
 }
 
-.tinyEditor {
-  margin-top: 50px;
+#qEditor {
+  min-height: 150px;
+  color: black;
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.answers > div {
+  color: black;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  padding-left: 20px;
+
+}
+
+.answers > div > p {
+  margin-bottom: 0;
+}
+
+.ques-details {
+  margin-bottom: 50px;
 }
 
 footer {

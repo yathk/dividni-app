@@ -1,14 +1,16 @@
 import { Editor } from '@tinymce/tinymce-react';
+import BundledEditor from '../BundledEditor';
 import React, { useRef, forwardRef, useContext } from 'react';
 import { DataStoreContext } from '../App';
 
 
-export default forwardRef(function QuestionEditor(props, ref) {
+export default forwardRef(function TinyEditor(props, ref) {
 
   const {
     datastore: DATASTORE,
     varDecorator: VAR_DECORATOR,
     handleDataChange: handleDataChange,
+    idName
   } = props
 
   const {DATA_STORE} = useContext(DataStoreContext)
@@ -78,13 +80,16 @@ export default forwardRef(function QuestionEditor(props, ref) {
 
   return (
     <>
-      <Editor
+      <BundledEditor
+        id={idName}
         tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
         onInit={(evt, editor) => {
           editorRef.current = editor
         }}
         init={{
-          height: 300,
+          language: 'en',
+          inline: true,
+          selector: 'div#qEditor',
           menubar: false,
           browser_spellcheck: true,
           contextmenu: false,
@@ -122,16 +127,16 @@ export default forwardRef(function QuestionEditor(props, ref) {
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount', 'noneditable'
+            'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
           ],
-          toolbar: 'undo redo | blocks | fontsize | ' +
+          toolbar: 'undo redo | fontsize | ' +
             'bold italic underline forecolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'alignright | bullist numlist outdent indent | ' +
             'removeformat | help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
         }}
       />
-      <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button>
+      {/* <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button> */}
     </>
   )
 })

@@ -1,24 +1,13 @@
 import { useEffect, useState } from 'react';
-
-
+import { Typography } from '@mui/material';
 import SideBarItem from './SideBarItem';
 
 export default function SideBar({
   datastore,
-  handleDataUpdated,
-  handleDataChange
+  handleDataUpdated
 }) {
   useEffect(() => handleDataUpdated());
 
-  const [isAddNewVar, setIsAddNewVar] = useState(false);
-  // Holds the current var Id being renamed. 
-  // Switches vars name fields to input allowing user to rename. 
-  const [varIdBeingChanged, setVarIdBeingChanged] = useState(null);
-
-  // Handler for when var is changed
-  const handleVarChanged = (e, varId) => {
-    console.log('var changed')
-  }
 
   const variables = datastore.getAllVariables();
   const displayList = variables.map((v, index) =>
@@ -31,9 +20,25 @@ export default function SideBar({
 
   return (
     <div className='sidebar'>
-      {/* <SidebarHeader onclick={() => setIsAddNewVar(true)} /> */}
+      <Typography
+        variant="h2"
+        p={2}
+      >
+        Variables
+      </Typography>
       <div className='sidebar-content'>
-        {displayList}
+        {
+          displayList.length > 0 ?
+            displayList
+            :
+            <Typography
+              sx={{ fontSize: 14, color: 'white' }}
+              textAlign={'center'}
+              mt={2}
+            >
+              No variables to display.
+            </Typography>
+        }
       </div>
     </div>
   )
