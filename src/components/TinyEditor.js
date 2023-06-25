@@ -2,6 +2,9 @@ import BundledEditor from '../BundledEditor';
 import React, { useRef, useContext } from 'react';
 import { DataStoreContext } from '../App';
 
+let varInstanceCount = 1;
+let varIdCount = 0;
+
 
 export default function TinyEditor(props) {
 
@@ -15,8 +18,6 @@ export default function TinyEditor(props) {
   const {DATA_STORE} = useContext(DataStoreContext)
 
   const editorRef = useRef(null);
-  const varInstanceCount = useRef(0);
-  const varIdCount = useRef(0);
 
   // console.log("rerendered")
 
@@ -49,7 +50,8 @@ export default function TinyEditor(props) {
     if (variable) {
       output = variable.id
     } else {
-      output = varIdCount.current++
+      output = varIdCount++
+
     }
     return output
   }
@@ -66,11 +68,12 @@ export default function TinyEditor(props) {
       v.setAttribute('varId', '' + getVarId(v.innerHTML))
 
       // Setting instanceId
-      const instanceId = v.getAttribute('instanceId');
-      if (instanceId && !instanceIds.includes(instanceId)) {
-        instanceIds.push(instanceId);
-      } else if (!instanceId || instanceIds.includes(instanceId)) {
-        v.setAttribute('id', '' + varInstanceCount.current++);
+      const instanceId = v.getAttribute('id');
+      // if (instanceId && !instanceIds.includes(instanceId)) {
+      //   instanceIds.push(instanceId);
+      // } else 
+      if (!instanceId) {
+        v.setAttribute('id', `instance${varInstanceCount++}`);
         v.setAttribute('tabindex', "-1")
       }
     })
@@ -97,8 +100,12 @@ export default function TinyEditor(props) {
             editor.addCommand('renameInstances', (ui, value) => {
               console.log(`renaming variable ${value}`)
               const variable = DATA_STORE.getVariableById(value)
+              // console.log(variable)
               variable.instances.forEach(instanceId => {
-                editorRef.current.getDoc().getElementById('' + instanceId).innerHTML = variable.title
+                console.log(`renaming instance ${instanceId}`)
+                const el = editorRef.current.getDoc().getElementById(instanceId)
+                console.log(el)
+                el.innerHTML = variable.title
               })
             })
 
@@ -132,7 +139,7 @@ export default function TinyEditor(props) {
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
         }}
       />
-      {/* <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button> */}
+      <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button>
     </>
   )
 }

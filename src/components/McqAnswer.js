@@ -9,18 +9,18 @@ export default function McqAnswer({
 	setDataDirty
 }) {
 
-	const {DATA_STORE} = useContext(DataStoreContext);
+	const { DATA_STORE } = useContext(DataStoreContext);
 
 	return (
 		<div
 		>
-			<Typography sx={{color: 'white'}}>{index}:</Typography>
+			<Typography sx={{ color: 'white' }}>{index}:</Typography>
 			<TinyEditor
 				idName={`answer${index}`}
 				datastore={DATA_STORE}
 				varDecorator={VAR_DECORATOR}
 				handleDataChange={() => setDataDirty(true)}
 			/>
-</div>
+		</div>
 	)
 }

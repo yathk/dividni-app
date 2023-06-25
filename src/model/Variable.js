@@ -38,10 +38,11 @@ export class Variable {
     }
 
     addInstance = (instanceId) => {
-      if ( ! Number.isInteger(instanceId) ){
-        console.log(`ERROR: instance ${instanceId} is not an integer`);
-      } else {
+      console.log(instanceId)
+      if ( instanceId ){
         this.#instances.add(instanceId);
+      } else {
+        console.log(`ERROR: instance ${instanceId} is not valid`);
       }
     }
 

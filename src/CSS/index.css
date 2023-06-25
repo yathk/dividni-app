@@ -101,7 +101,7 @@ input, input:focus, select, select:focus {
   padding: 20px;
 }
 
-.answers > div {
+.answers > div > div {
   color: black;
   background-color: white;
   border-radius: 10px;
@@ -109,7 +109,7 @@ input, input:focus, select, select:focus {
   padding-left: 20px;
 }
 
-.answers > div > p {
+.answers > div > div > p {
   margin-bottom: 0;
 }
 

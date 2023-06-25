@@ -21,8 +21,8 @@ function SideBarItem({ id, name,
   const { DATA_STORE, setDataStore, editorIds } = useContext(DataStoreContext);
 
   const handleDelete = () => {
-    editorIds.forEach((id: string) => {
-      const editor = tinymce.get(id);
+    editorIds.current.forEach((editorId: string) => {
+      const editor = tinymce.get(editorId);
       if (editor) {
         editor.execCommand('removeInstances', false, id)
       }

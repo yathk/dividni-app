@@ -66,8 +66,10 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
 
   const handleSave = () => {
     variable.title = title
-    editorIds.forEach((id: string) => {
+    editorIds.current.forEach((id: string) => {
       const editor = tinymce.get(id)
+      console.log(id)
+      // console.log(editor?.id || "no id")
       editor && editor.execCommand('renameInstances', false, variable.id)
     });
 

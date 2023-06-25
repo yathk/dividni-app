@@ -32,7 +32,7 @@ export const DataStoreContext = createContext();
 function App() {
   const [dataDirty, setDataDirty] = useState(true);
   const [DATA_STORE, setDataStore] = useState(newDataStore)
-  const editorIds = useRef([]);
+  const editorIds = useRef(['qEditor', 'answer1']);
 
   return (
     <div className="App">
