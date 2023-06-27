@@ -38,7 +38,6 @@ export class Variable {
     }
 
     addInstance = (instanceId) => {
-      console.log(instanceId)
       if ( instanceId ){
         this.#instances.add(instanceId);
       } else {

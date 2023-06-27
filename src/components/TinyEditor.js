@@ -19,8 +19,6 @@ export default function TinyEditor(props) {
 
   const editorRef = useRef(null);
 
-  // console.log("rerendered")
-
   const variableFormat = {
     'custom-variable-style': {
       inline: 'span',
@@ -100,11 +98,8 @@ export default function TinyEditor(props) {
             editor.addCommand('renameInstances', (ui, value) => {
               console.log(`renaming variable ${value}`)
               const variable = DATA_STORE.getVariableById(value)
-              // console.log(variable)
               variable.instances.forEach(instanceId => {
-                console.log(`renaming instance ${instanceId}`)
                 const el = editorRef.current.getDoc().getElementById(instanceId)
-                console.log(el)
                 el.innerHTML = variable.title
               })
             })
@@ -139,7 +134,7 @@ export default function TinyEditor(props) {
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
         }}
       />
-      <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button>
+      {/* <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button> */}
     </>
   )
 }

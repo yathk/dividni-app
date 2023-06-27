@@ -1,10 +1,10 @@
 import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
 
-import { IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Typography } from '@mui/material'
+import { IconButton, Dialog, DialogTitle, DialogContent, Stack, TextField, DialogActions, Button, Typography } from '@mui/material'
 import { settingsProps } from './SettingsDialog'
 import { Choice, Variable } from '../../model/Variable.js'
 import { DataStoreContext } from '../../App'
-import { Stack } from 'react-bootstrap'
+// import { Stack } from 'react-bootstrap'
 import CloseIcon from '@mui/icons-material/Close';
 import tinymce from 'tinymce'
 
@@ -113,8 +113,9 @@ export default function ChoiceSettings({ open, setOpen, variable }: choiceSettin
           choices.map((choice, index) => (
             <Stack
               key={index}
-              direction='horizontal'
+              flexDirection='row'
               gap={3}
+              alignItems={'center'}
             >
               <Typography>{index}:</Typography>
               <TextField

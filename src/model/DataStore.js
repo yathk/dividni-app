@@ -33,7 +33,6 @@ export class VariablesDataStore {
       const index = this.savedVariables.indexOf(variable)
       this.savedVariables.splice(index, 1)
     }
-    console.log(this.savedVariables)
   }
 
   getVariable = (varName) => {
@@ -75,7 +74,6 @@ export class VariablesDataStore {
       } else {
         const varId = parseInt(varHtml.getAttribute('varId'));
         const newVar = new Choice(varName, varId);
-        console.log(instanceId)
         newVar.addInstance(instanceId);
         this.addVariable(newVar);
       }
