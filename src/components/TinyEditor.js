@@ -49,17 +49,37 @@ export default function TinyEditor(props) {
       output = variable.id
     } else {
       output = varIdCount++
-
     }
     return output
   }
 
   const assignIds = () => {
     const editor = editorRef.current
+    let content = editor.getContent({format: "raw"})
+    console.log(content)
+    const matchedText = content.match(/@(.*)@&nbsp;/)
+    if (matchedText) {
+      console.log(`found match: ${matchedText}`)
+      const varName = matchedText.slice(1, matchedText.length)
+      console.log(`found varName: ${varName}`)
+  
+      content = content.replace(/@(.*)@&nbsp;/, `
+        <span
+          style="color: #c2c2c2; font-weight: bold; border: 1px solid #c2c2c2"
+          class="variable mceNonEditable"
+          contenteditable="false"
+        >
+          ${varName}
+        </span>
+      `)
+  
+      editor.setContent(content,)
+    }
+
+
     const domVars = editor.dom.select('span.variable');
 
     // holds ids for this parse.
-    const instanceIds = [];
     domVars.forEach(v => {
       v.innerHTML = v.innerHTML.trim()
       // Setting varId
@@ -67,9 +87,6 @@ export default function TinyEditor(props) {
 
       // Setting instanceId
       const instanceId = v.getAttribute('id');
-      // if (instanceId && !instanceIds.includes(instanceId)) {
-      //   instanceIds.push(instanceId);
-      // } else 
       if (!instanceId) {
         v.setAttribute('id', `instance${varInstanceCount++}`);
         v.setAttribute('tabindex', "-1")
@@ -119,9 +136,9 @@ export default function TinyEditor(props) {
               editor.save();
             });
           },
-          text_patterns: [
-            { start: VAR_DECORATOR, end: VAR_DECORATOR, format: 'custom-variable-style'},
-          ],
+          // text_patterns: [
+          //   { start: VAR_DECORATOR, end: VAR_DECORATOR, format: 'custom-variable-style'},
+          // ],
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
@@ -134,7 +151,7 @@ export default function TinyEditor(props) {
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
         }}
       />
-      {/* <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button> */}
+      <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button>
     </>
   )
 }
