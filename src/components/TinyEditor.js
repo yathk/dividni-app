@@ -86,9 +86,7 @@ export default function TinyEditor(props) {
         contenteditable="false"
       >
       ${varName.trim()}
-      </span>
-        &nbsp;
-      <span id="cursor-marker"></span>
+      </span>&nbsp;<span id="cursor-marker"></span>
       `)
 
 
