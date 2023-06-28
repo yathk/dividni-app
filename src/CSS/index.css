@@ -18,7 +18,7 @@ body {
 :root {
   --bg: #2E313A;
   --nav-bar-colour: black;
-  --nav-size: 10vh;
+  --nav-size: 8vh;
   --sidebar-width: 250px;
   --text-colour: white;
   --input-field-border: 1px solid rgb(168, 167, 167);
@@ -41,8 +41,14 @@ a {
 
 .page-content-container {
   width: calc(100% - 250px);
-  margin-top: 8vh;
-  padding: 80px;
+  /* margin-top: 8vh; */
+  padding: 60px 80px;
+}
+
+.alert {
+  width: calc(100% - 250px);
+  position: fixed;
+  top: 8vh;
 }
 
 label .label-text {

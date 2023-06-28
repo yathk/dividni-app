@@ -1,5 +1,5 @@
 .navbar {
-    position: fixed;
+    position: sticky;
     background-color: var(--nav-bar-colour);
     height: var(--nav-size);
     display: flex;
@@ -8,6 +8,7 @@
     padding: 20px;
     width: 100%;
     top: 0;
+    z-index: 2;
 }
 
 .logo {

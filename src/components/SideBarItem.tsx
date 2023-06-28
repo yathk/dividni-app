@@ -80,6 +80,7 @@ function SideBarItem({ id, name,
       >
         <Box
           height={'100%'}
+          py={3}
           onClick={() => setIsDialogOpen(true)}
         >
           <Typography
@@ -90,6 +91,9 @@ function SideBarItem({ id, name,
           </Typography>
         </Box>
         <IconButton
+          sx={{
+            mr: 3
+          }}
           onClick={() => setIsConfirmOpen(true)}
         >
           <CloseIcon sx={{ color: "white" }} />

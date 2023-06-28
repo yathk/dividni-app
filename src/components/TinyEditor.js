@@ -1,10 +1,16 @@
 import BundledEditor from '../BundledEditor';
 import React, { useRef, useContext } from 'react';
-import { DataStoreContext } from '../App';
+import { AlertContext, DataStoreContext } from '../App';
 
 let varInstanceCount = 1;
 let varIdCount = 0;
 
+// helper for decoding html
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+}
 
 export default function TinyEditor(props) {
 
@@ -15,7 +21,8 @@ export default function TinyEditor(props) {
     idName
   } = props
 
-  const {DATA_STORE} = useContext(DataStoreContext)
+  const { DATA_STORE } = useContext(DataStoreContext)
+  const { setAlertText } = useContext(AlertContext)
 
   const editorRef = useRef(null);
 
@@ -55,25 +62,41 @@ export default function TinyEditor(props) {
 
   const assignIds = () => {
     const editor = editorRef.current
-    let content = editor.getContent({format: "raw"})
-    console.log(content)
-    const matchedText = content.match(/@(.*)@&nbsp;/)
+    let content = editor.getContent({ format: "raw" })
+
+    // Look for variables enclosed in @
+    const matchedText = content.match(/@([^@]*)@&nbsp;/)
+
     if (matchedText) {
-      console.log(`found match: ${matchedText}`)
-      const varName = matchedText.slice(1, matchedText.length)
-      console.log(`found varName: ${varName}`)
-  
-      content = content.replace(/@(.*)@&nbsp;/, `
-        <span
-          style="color: #c2c2c2; font-weight: bold; border: 1px solid #c2c2c2"
-          class="variable mceNonEditable"
-          contenteditable="false"
-        >
-          ${varName}
-        </span>
+      // Get entered var name
+      const varName = decodeHtml(matchedText[0].replaceAll('@', '')).trim()
+
+      // Don't allow if var name empty
+      if (!varName || varName === " ") {
+        setAlertText("Variable names can't be a space!")
+        return
+      }
+      setAlertText("")
+
+      // Replace entered text with span marking variable
+      content = content.replace(/@([^@]*)@&nbsp;/, `
+      <span
+        style="color: #c2c2c2; font-weight: bold; border: 1px solid #c2c2c2"
+        class="variable mceNonEditable"
+        contenteditable="false"
+      >
+      ${varName.trim()}
+      </span>
+        &nbsp;
+      <span id="cursor-marker"></span>
       `)
-  
-      editor.setContent(content,)
+
+
+      editor.setContent(content)
+      const markerEl = editor.getDoc().getElementById('cursor-marker')
+      editor.selection.select(markerEl)
+      editor.selection.collapse(false)
+      markerEl.remove()
     }
 
 
@@ -130,7 +153,7 @@ export default function TinyEditor(props) {
             })
 
             // Dirty event is fired any time editor changes from previous save.
-            editor.on('Dirty', (e) => {
+            editor.on('Dirty', (ev) => {
               assignIds();
               parseVars();
               editor.save();
@@ -150,8 +173,9 @@ export default function TinyEditor(props) {
             'removeformat',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
         }}
+
       />
-      <button onClick={() => console.log(editorRef.current.getContent({format: "raw"}))}>Log editor content</button>
+      <button onClick={() => console.log(editorRef.current.getContent({ format: "raw" }))}>Log editor content</button>
     </>
   )
 }
