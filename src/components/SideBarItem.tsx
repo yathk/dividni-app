@@ -20,6 +20,8 @@ function SideBarItem({ id, name,
 
   const { DATA_STORE, setDataStore, editorIds } = useContext(DataStoreContext);
 
+  const variable = DATA_STORE.getVariableById(id)
+
   const handleDelete = () => {
     editorIds.current.forEach((editorId: string) => {
       const editor = tinymce.get(editorId);
@@ -87,7 +89,7 @@ function SideBarItem({ id, name,
             id={"" + id}
             className='var-name'
           >
-            {name}
+            {name} ({variable.instances.length})
           </Typography>
         </Box>
         <IconButton

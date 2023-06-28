@@ -10,7 +10,7 @@ import SideBar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import QDetails from './components/QDetails';
 import TinyEditor from './components/TinyEditor';
-import { Choice } from './model/Variable.js'
+import { Variable } from './model/Variable.js'
 import { VariablesDataStore } from './model/DataStore.js';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './theme';
@@ -23,11 +23,12 @@ import McqAnswer from './components/McqAnswer';
 import { Button } from '@mui/material';
 
 
-const VAR_DECORATOR = '@';
+export const VAR_DECORATOR = '@';
+
 const newDataStore = new VariablesDataStore();
 
 
-const tempVar = new Choice('my variable', 22)
+const tempVar = new Variable('my variable', 22, 'choice')
 tempVar.addChoice("test1")
 tempVar.addChoice("test2")
 newDataStore.addVariable(tempVar)
@@ -40,7 +41,7 @@ function App() {
   const [DATA_STORE, setDataStore] = useState(newDataStore)
   const editorIds = useRef(['qEditor', 'answer1']);
   const [answers, setAnswers] = useState([{ id: 'answer1', isCorrect: true }])
-  const [alertText, setAlertText] = useState(' test error ')
+  const [alertText, setAlertText] = useState('')
 
   const handleAddAnswer = () => {
     answers.push({
@@ -101,8 +102,6 @@ function App() {
                 <div className='tinyEditor'>
                   <TinyEditor
                     idName="qEditor"
-                    datastore={DATA_STORE}
-                    varDecorator={VAR_DECORATOR}
                     handleDataChange={() => setDataDirty(true)}
                   />
                 </div>
@@ -116,7 +115,6 @@ function App() {
                         key={answer.id}
                         idName={answer.id}
                         index={index}
-                        VAR_DECORATOR={VAR_DECORATOR}
                         setDataDirty={setDataDirty}
                         handleRemoveAnswer={handleRemoveAnswer}
                         answers={answers}

@@ -1,6 +1,7 @@
 import BundledEditor from '../BundledEditor';
 import React, { useRef, useContext } from 'react';
-import { AlertContext, DataStoreContext } from '../App';
+import { AlertContext, DataStoreContext, VAR_DECORATOR} from '../App';
+import { CHOICE_COLOUR, Variable } from '../model/Variable';
 
 let varInstanceCount = 1;
 let varIdCount = 0;
@@ -15,8 +16,6 @@ function decodeHtml(html) {
 export default function TinyEditor(props) {
 
   const {
-    datastore: DATASTORE,
-    varDecorator: VAR_DECORATOR,
     handleDataChange: handleDataChange,
     idName
   } = props
@@ -26,40 +25,28 @@ export default function TinyEditor(props) {
 
   const editorRef = useRef(null);
 
-  const variableFormat = {
-    'custom-variable-style': {
-      inline: 'span',
-      wrapper: true,
-      styles: {
-        'color': '#c2c2c2',
-        'font-weight': 'bold',
-        'border': '1px solid #c2c2c2'
-      },
-      attributes: {
-        'class': 'variable mceNonEditable',
-        'contenteditable': 'false',
-      }
-    }
-  }
-
-  // check all vars and update internal state
+  // check all vars and update datastore
   const parseVars = () => {
     const contentHtml = editorRef.current.getDoc()
     DATA_STORE.syncInstances(contentHtml);
     handleDataChange();
   }
 
+  // Helper for getting id of exisitng vars
   const getVarId = (varTitle) => {
     const variable = DATA_STORE.getVariable(varTitle)
     let output = -1
     if (variable) {
       output = variable.id
     } else {
-      output = varIdCount++
+      const newVar = new Variable(varTitle, ++varIdCount, 'choice')
+      DATA_STORE.addVariable(newVar)
+      output = varIdCount
     }
     return output
   }
 
+  // Wraps each var entered in a span with unique id
   const assignIds = () => {
     const editor = editorRef.current
     let content = editor.getContent({ format: "raw" })
@@ -78,41 +65,30 @@ export default function TinyEditor(props) {
       }
       setAlertText("")
 
+      const varId = getVarId(varName)
+      const variable = DATA_STORE.getVariableById(varId)
+      const colour = variable ? variable.colour : CHOICE_COLOUR
+
       // Replace entered text with span marking variable
       content = content.replace(/@([^@]*)@&nbsp;/, `
       <span
-        style="color: #c2c2c2; font-weight: bold; border: 1px solid #c2c2c2"
+        id=instance${++varInstanceCount}
+        style="color: ${colour}; font-weight: bold; border: 1px solid ${colour}; border-radius: 5px; padding: 0 5px;"
         class="variable mceNonEditable"
         contenteditable="false"
-      >
-      ${varName.trim()}
-      </span>&nbsp;<span id="cursor-marker"></span>
+      >${varName}</span>&nbsp;<span id="cursor-marker"></span>
       `)
 
-
       editor.setContent(content)
+
+      const newVarEl = editor.getDoc().getElementById(`instance${varInstanceCount}`)
+      newVarEl.setAttribute('varid', varId)
+
       const markerEl = editor.getDoc().getElementById('cursor-marker')
       editor.selection.select(markerEl)
       editor.selection.collapse(false)
       markerEl.remove()
     }
-
-
-    const domVars = editor.dom.select('span.variable');
-
-    // holds ids for this parse.
-    domVars.forEach(v => {
-      v.innerHTML = v.innerHTML.trim()
-      // Setting varId
-      v.setAttribute('varId', '' + getVarId(v.innerHTML))
-
-      // Setting instanceId
-      const instanceId = v.getAttribute('id');
-      if (!instanceId) {
-        v.setAttribute('id', `instance${varInstanceCount++}`);
-        v.setAttribute('tabindex', "-1")
-      }
-    })
   }
 
   return (
@@ -128,8 +104,7 @@ export default function TinyEditor(props) {
           menubar: false,
           browser_spellcheck: true,
           contextmenu: false,
-          formats: variableFormat,
-          extended_valid_elements: 'span[id|style|class|instanceId|varId]',
+          extended_valid_elements: 'span[id|style|class|varid]',
           setup: (editor) => {
 
             // Renames all instances of a variable
@@ -157,9 +132,6 @@ export default function TinyEditor(props) {
               editor.save();
             });
           },
-          // text_patterns: [
-          //   { start: VAR_DECORATOR, end: VAR_DECORATOR, format: 'custom-variable-style'},
-          // ],
           plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',

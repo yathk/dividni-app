@@ -1,14 +1,31 @@
 let NEXT_ID = 0
 
+export const CHOICE_COLOUR = '#fc6203'
+export const RANDOM_COLOUR = '#57b0ff'
+
 export class Variable {
     #id;
     #title;
     #instances;
+    #colour;
+    #choices;
+    #type
+    #min
+    #max
+    #multiplier
 
-    constructor(title, id) {
+    constructor(title, id, type) {
       this.#id = id;
       this.#title = title;
       this.#instances = new Set();
+      this.#type = type;
+      this.#choices = [];
+
+      if (type === 'choice') {
+        this.#colour = CHOICE_COLOUR;
+      } else if (type === 'random') {
+        this.#colour = RANDOM_COLOUR;
+      }
     }
 
     get id() {
@@ -25,6 +42,22 @@ export class Variable {
       } else {
         this.#title = newTitle;
       }
+    }
+
+    get type() {
+      return this.#type;
+    }
+
+    set type(newType) {
+      this.#type = newType;
+    }
+
+    get colour() {
+      return this.#colour
+    }
+
+    set colour(newColour) {
+      this.#colour = newColour
     }
 
     get instances() {
@@ -52,40 +85,69 @@ export class Variable {
     isInEditor = () => {
       return !(this.#instances.length === 0);
     }
-}
 
-export class Choice extends Variable {
-  #choices;
-
-  constructor(title, id) {
-    super(title, id);
-    this.#choices = [];
-  }
-
-  set choices(newChoices) {
-    this.#choices = newChoices
-  }
-
-  getChoices = () => {
-    return [...this.#choices]
-  }
-
-  addChoice = (choiceToAdd) => {
-    if ( ! (typeof choiceToAdd === 'string' || choiceToAdd instanceof String) ) {
-      console.log("ERROR: Choice value must be a string!");
-    } else if ( this.#choices.includes(choiceToAdd) ) {
-      console.log("ERROR: Choice value already exists!");
-    } else {
-      this.#choices.push(choiceToAdd);
+    // Choice methods
+    set choices(newChoices) {
+      this.#choices = newChoices
     }
-  }
-
-  removeChoice = (choiceToRemove) => {
-    if ( ! this.#choices.includes(choiceToRemove )) {
-      console.log("ERROR: Choice value doesn't exist!")
-    } else {
-      const index = this.#choices.indexOf(choiceToRemove);
-      this.#choices.slice(index, index);
+  
+    getChoices = () => {
+      return [...this.#choices]
     }
-  }
+  
+    addChoice = (choiceToAdd) => {
+      if ( ! (typeof choiceToAdd === 'string' || choiceToAdd instanceof String) ) {
+        console.log("ERROR: Choice value must be a string!");
+      } else if ( this.#choices.includes(choiceToAdd) ) {
+        console.log("ERROR: Choice value already exists!");
+      } else {
+        this.#choices.push(choiceToAdd);
+      }
+    }
+  
+    removeChoice = (choiceToRemove) => {
+      if ( ! this.#choices.includes(choiceToRemove )) {
+        console.log("ERROR: Choice value doesn't exist!")
+      } else {
+        const index = this.#choices.indexOf(choiceToRemove);
+        this.#choices.slice(index, index);
+      }
+    }
+
+    // Random methods
+    get min() {
+      return this.#min
+    }
+  
+    set min(newMin) {
+      if (typeof newMin === 'integer') {
+        this.#min = newMin
+      } else {
+        console.log(`ERROR: ${newMin} is not a number!`)
+      }
+    }
+  
+    get max() {
+      return this.#max
+    }
+  
+    set min(newMax) {
+      if (typeof newMax === 'integer') {
+        this.#max = newMax
+      } else {
+        console.log(`ERROR: ${newMax} is not a number!`)
+      }
+    }
+  
+    get multiplier() {
+      return this.#multiplier
+    }
+  
+    set multiplier(newMulti) {
+      if (typeof newMulti === 'integer') {
+        this.#multiplier = newMulti
+      } else {
+        console.log(`ERROR: ${newMulti} is not a number!`)
+      }
+    }
 }

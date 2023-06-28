@@ -1,4 +1,4 @@
-import {Choice, Variable} from './Variable.js';
+import {Choice, Random, Variable} from './Variable.js';
 
 // Helper
 function checkVarType(newVar) {
@@ -58,7 +58,7 @@ export class VariablesDataStore {
     // delete extra instances
     this.savedVariables.forEach((sv) => {
       sv.instances.forEach((inst) => {
-        if ( !htmlDoc.getElementById('' + inst) ) {
+        if ( !htmlDoc.getElementById('instance' + inst) ) {
           sv.removeInstance(inst)
         }
       })
@@ -67,15 +67,16 @@ export class VariablesDataStore {
     const variablesHtml = Array.from(htmlDoc.getElementsByClassName('variable'));
     variablesHtml.forEach((varHtml) => {
       const instanceId = varHtml.getAttribute('id');
-      const varName = varHtml.innerText;
-      const retrivedVar = this.getVariable(varName);
+      const varId = varHtml.getAttribute('varid');
+      const retrivedVar = this.getVariableById(varId);
       if (retrivedVar) {
         retrivedVar.addInstance(instanceId);
       } else {
-        const varId = parseInt(varHtml.getAttribute('varId'));
-        const newVar = new Choice(varName, varId);
-        newVar.addInstance(instanceId);
-        this.addVariable(newVar);
+        // const varId = parseInt(varHtml.getAttribute('varId'));
+        // // const newVar = new Choice(varName, varId);
+        // const newVar = new Random(varName, varId);
+        // newVar.addInstance(instanceId);
+        // this.addVariable(newVar);
       }
     })
   }
