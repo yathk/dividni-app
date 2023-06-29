@@ -20,9 +20,9 @@ export default function AddVarDialog({ open, setOpen }: AddVarDialogProps) {
 
 
 	const handleAddNewVar = (type: string) => {
-		setNewVarId(getNewVarId())
-		const newVar = new Variable('', newVarId, type)
+		const newVar = new Variable('', getNewVarId(), type)
 		DATA_STORE.addVariable(newVar)
+		setNewVarId(newVar.id)
 		setVariable(newVar)
 		setOpen(false)
 		setDialogOpen(true)

@@ -138,7 +138,7 @@ export default function SettingsDialog({ varId, open, setOpen, variable, handleC
   }
 
   const handleSave = () => {
-    if (!titleErr && !randomErrText) {
+    if (title && !titleErr && !randomErrText) {
       variable!.title = title
       variable!.min = parseInt(min)
       variable!.max = parseInt(max)
