@@ -6,6 +6,8 @@ import { Dialog, DialogTitle, DialogContent, Button, TextField, DialogActions, I
 import CloseIcon from '@mui/icons-material/Close';
 import { DataStoreContext } from '../App';
 
+import CircleIcon from '@mui/icons-material/Circle';
+
 
 interface SideBarItemProps {
   id: number,
@@ -33,13 +35,19 @@ function SideBarItem({ id, name,
     setDataStore({...DATA_STORE})
     setIsConfirmOpen(false);
   }
+  
+  const handleClose = () => {
+    setIsDialogOpen(false)
+  }
 
   return (
-    <>
+    variable && variable.title ? <>
       <SettingsDialog
         varId={id}
         open={isDialogOpen}
         setOpen={setIsDialogOpen}
+        handleClose={handleClose}
+        variable={variable}
       />
 
       <Dialog
@@ -80,6 +88,13 @@ function SideBarItem({ id, name,
       <div
         className='sidebar-item'
       >
+        <CircleIcon 
+          sx={{
+            color: variable.colour,
+            fontSize: '12px',
+            mr: '10px'
+          }} 
+        />
         <Box
           height={'100%'}
           py={3}
@@ -88,6 +103,7 @@ function SideBarItem({ id, name,
           <Typography
             id={"" + id}
             className='var-name'
+            textAlign={'center'}
           >
             {name} ({variable.instances.length})
           </Typography>
@@ -104,6 +120,8 @@ function SideBarItem({ id, name,
       </div>
 
     </>
+    :
+    null
   )
 }
 

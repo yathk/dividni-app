@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import SideBarItem from './SideBarItem';
+import AddVarDialog from './varSettings/AddVarDialog';
 
 export default function SideBar({
   datastore,
@@ -8,6 +9,11 @@ export default function SideBar({
 }) {
   useEffect(() => handleDataUpdated());
 
+  const [dialogOpen, setIsOpen] = useState(false)
+
+  const handleAddVar = () => {
+    setIsOpen(true);
+  }
 
   const variables = datastore.getAllVariables();
   const displayList = variables.map((v, index) =>
@@ -20,12 +26,25 @@ export default function SideBar({
 
   return (
     <div className='sidebar'>
+
+      <AddVarDialog open={dialogOpen} setOpen={setIsOpen}/>
+
       <Typography
         variant="h2"
         p={2}
       >
         Variables
       </Typography>
+
+      <Button 
+        variant="outlined" 
+        color="primary" 
+        sx={{width: '100%'}}
+        onClick={handleAddVar}
+      >
+        Add variable
+      </Button>
+
       <div className='sidebar-content'>
         {
           displayList.length > 0 ?

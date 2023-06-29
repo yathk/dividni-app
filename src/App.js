@@ -43,6 +43,11 @@ function App() {
   const [answers, setAnswers] = useState([{ id: 'answer1', isCorrect: true }])
   const [alertText, setAlertText] = useState('')
 
+
+  const handleDataChange = () => {
+    setDataDirty(true)
+  }
+
   const handleAddAnswer = () => {
     answers.push({
       id: `answer${answers.length + 1}`,
@@ -102,7 +107,6 @@ function App() {
                 <div className='tinyEditor'>
                   <TinyEditor
                     idName="qEditor"
-                    handleDataChange={() => setDataDirty(true)}
                   />
                 </div>
 

@@ -20,6 +20,9 @@ export class Variable {
       this.#instances = new Set();
       this.#type = type;
       this.#choices = [];
+      this.#min = 0;
+      this.#max = 10;
+      this.#multiplier = 1;
 
       if (type === 'choice') {
         this.#colour = CHOICE_COLOUR;
@@ -50,6 +53,17 @@ export class Variable {
 
     set type(newType) {
       this.#type = newType;
+    }
+
+    changeType = (newType) => {
+      if (newType === 'choice') {
+        this.#type = newType;
+        this.#colour = CHOICE_COLOUR;
+      } else if (newType === 'random') {
+        this.#type = newType;
+        console.log('changing to ' + RANDOM_COLOUR)
+        this.#colour = RANDOM_COLOUR;
+      }
     }
 
     get colour() {
@@ -120,7 +134,7 @@ export class Variable {
     }
   
     set min(newMin) {
-      if (typeof newMin === 'integer') {
+      if (typeof newMin === 'number') {
         this.#min = newMin
       } else {
         console.log(`ERROR: ${newMin} is not a number!`)
@@ -131,8 +145,8 @@ export class Variable {
       return this.#max
     }
   
-    set min(newMax) {
-      if (typeof newMax === 'integer') {
+    set max(newMax) {
+      if (typeof newMax === 'number') {
         this.#max = newMax
       } else {
         console.log(`ERROR: ${newMax} is not a number!`)
@@ -144,7 +158,7 @@ export class Variable {
     }
   
     set multiplier(newMulti) {
-      if (typeof newMulti === 'integer') {
+      if (typeof newMulti === 'number') {
         this.#multiplier = newMulti
       } else {
         console.log(`ERROR: ${newMulti} is not a number!`)

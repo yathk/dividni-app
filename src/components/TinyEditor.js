@@ -1,10 +1,14 @@
 import BundledEditor from '../BundledEditor';
-import React, { useRef, useContext } from 'react';
-import { AlertContext, DataStoreContext, VAR_DECORATOR} from '../App';
+import React, { useRef, useContext, useState, memo } from 'react';
+import { AlertContext, DataStoreContext, VAR_DECORATOR } from '../App';
 import { CHOICE_COLOUR, Variable } from '../model/Variable';
 
 let varInstanceCount = 1;
-let varIdCount = 0;
+ let varIdCount = 0;
+
+ export function getNewVarId() {
+  return ++varIdCount
+}
 
 // helper for decoding html
 function decodeHtml(html) {
@@ -13,23 +17,20 @@ function decodeHtml(html) {
   return txt.value;
 }
 
-export default function TinyEditor(props) {
+export default memo(function TinyEditor({idName}) {
 
-  const {
-    handleDataChange: handleDataChange,
-    idName
-  } = props
-
-  const { DATA_STORE } = useContext(DataStoreContext)
+  const { DATA_STORE, setDataStore } = useContext(DataStoreContext)
   const { setAlertText } = useContext(AlertContext)
 
   const editorRef = useRef(null);
+
+  // console.log("rerendered")
 
   // check all vars and update datastore
   const parseVars = () => {
     const contentHtml = editorRef.current.getDoc()
     DATA_STORE.syncInstances(contentHtml);
-    handleDataChange();
+    setDataStore({...DATA_STORE})
   }
 
   // Helper for getting id of exisitng vars
@@ -72,6 +73,7 @@ export default function TinyEditor(props) {
       // Replace entered text with span marking variable
       content = content.replace(/@([^@]*)@&nbsp;/, `
       <span
+        varid=${varId}
         id=instance${++varInstanceCount}
         style="color: ${colour}; font-weight: bold; border: 1px solid ${colour}; border-radius: 5px; padding: 0 5px;"
         class="variable mceNonEditable"
@@ -81,9 +83,7 @@ export default function TinyEditor(props) {
 
       editor.setContent(content)
 
-      const newVarEl = editor.getDoc().getElementById(`instance${varInstanceCount}`)
-      newVarEl.setAttribute('varid', varId)
-
+      // Moves cursor to after inserted variable
       const markerEl = editor.getDoc().getElementById('cursor-marker')
       editor.selection.select(markerEl)
       editor.selection.collapse(false)
@@ -104,7 +104,7 @@ export default function TinyEditor(props) {
           menubar: false,
           browser_spellcheck: true,
           contextmenu: false,
-          extended_valid_elements: 'span[id|style|class|varid]',
+          extended_valid_elements: 'span[id|style|class|varid|onclick]',
           setup: (editor) => {
 
             // Renames all instances of a variable
@@ -114,6 +114,16 @@ export default function TinyEditor(props) {
               variable.instances.forEach(instanceId => {
                 const el = editorRef.current.getDoc().getElementById(instanceId)
                 el.innerHTML = variable.title
+              })
+            })
+
+            // Changes color of all instances of a variable
+            editor.addCommand('changeVarColour', (ui, value) => {
+              const variable = DATA_STORE.getVariableById(value)
+              variable.instances.forEach(instanceId => {
+                const el = editorRef.current.getDoc().getElementById(instanceId)
+                el.style.color = variable.colour
+                el.style.borderColor = variable.colour
               })
             })
 
@@ -141,11 +151,11 @@ export default function TinyEditor(props) {
             'bold italic underline forecolor | alignleft aligncenter ' +
             'alignright | bullist numlist outdent indent | ' +
             'removeformat',
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14pt }'
+          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:12pt }'
         }}
 
       />
       <button onClick={() => console.log(editorRef.current.getContent({ format: "raw" }))}>Log editor content</button>
     </>
   )
-}
+})
