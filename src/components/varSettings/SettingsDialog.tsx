@@ -53,6 +53,8 @@ export default function SettingsDialog({ varId, open, setOpen, variable, handleC
     setMin("" + variable!.min)
     setMax("" + variable!.max)
     setMultiplier("" + variable!.multiplier)
+    setTitleErr("")
+    setRandErrText("")
   }, [open])
 
   const intTestRegex = /^-?\d*$/
@@ -127,11 +129,12 @@ export default function SettingsDialog({ varId, open, setOpen, variable, handleC
   }
 
   const handleTitleRename = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const value = e.target.value
+    let value = e.target.value
     setTitle(value)
     const existingNames: string[] = DATA_STORE.getAllVariables().map((v: Variable) => v.title)
-    if (!value === variable!.title && existingNames.includes(value)) {
-      setTitleErr("variable! names must be unique.")
+    value = value.trim()
+    if (value !== variable!.title && existingNames.includes(value)) {
+      setTitleErr("Variable names must be unique.")
     } else {
       setTitleErr("")
     }
@@ -139,7 +142,7 @@ export default function SettingsDialog({ varId, open, setOpen, variable, handleC
 
   const handleSave = () => {
     if (title && !titleErr && !randomErrText) {
-      variable!.title = title
+      variable!.title = title.trim()
       variable!.min = parseInt(min)
       variable!.max = parseInt(max)
       variable!.multiplier = parseInt(multiplier)
@@ -184,8 +187,9 @@ export default function SettingsDialog({ varId, open, setOpen, variable, handleC
           variant="outlined"
           onChange={(e) => handleTitleRename(e)}
           value={title}
-          helperText={titleErr || " "}
+          helperText={titleErr || ""}
           error={!!titleErr}
+          sx={{ mb: 3 }}
         />
 
         <TextField
