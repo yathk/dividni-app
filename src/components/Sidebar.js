@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Box, Stack } from '@mui/material';
 import SideBarItem from './SideBarItem';
 import AddVarDialog from './varSettings/AddVarDialog';
 
@@ -27,7 +27,7 @@ export default function SideBar({
   return (
     <div className='sidebar'>
 
-      <AddVarDialog open={dialogOpen} setOpen={setIsOpen}/>
+      <AddVarDialog open={dialogOpen} setOpen={setIsOpen} />
 
       <Typography
         variant="h2"
@@ -36,14 +36,16 @@ export default function SideBar({
         Variables
       </Typography>
 
-      <Button 
-        variant="outlined" 
-        color="primary" 
-        sx={{width: '100%'}}
-        onClick={handleAddVar}
-      >
-        Add variable
-      </Button>
+      <Stack alignItems={'center'}>
+        <Button
+          variant="outlined"
+          color="white"
+          sx={{ width: '80%'}}
+          onClick={handleAddVar}
+        >
+          Add variable
+        </Button>
+      </Stack>
 
       <div className='sidebar-content'>
         {

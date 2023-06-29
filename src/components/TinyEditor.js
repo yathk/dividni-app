@@ -24,8 +24,6 @@ export default memo(function TinyEditor({idName}) {
 
   const editorRef = useRef(null);
 
-  // console.log("rerendered")
-
   // check all vars and update datastore
   const parseVars = () => {
     const contentHtml = editorRef.current.getDoc()

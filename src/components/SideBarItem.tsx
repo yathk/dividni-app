@@ -109,8 +109,10 @@ function SideBarItem({ id, name,
           </Typography>
         </Box>
         <IconButton
+          color='white'
           sx={{
-            mr: 3
+            mr: 3,
+            color: "white"
           }}
           onClick={() => setIsConfirmOpen(true)}
         >

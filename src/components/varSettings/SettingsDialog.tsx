@@ -177,7 +177,7 @@ export default function SettingsDialog({ varId, open, setOpen, variable, handleC
         }
       }}
     >
-      <DialogContent>
+      <DialogContent sx={{pb: 0}}>
         <TextField
           size='small'
           id="var-name"
