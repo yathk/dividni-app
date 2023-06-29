@@ -2,7 +2,7 @@ import { IconButton, Typography, Checkbox, FormHelperText, FormControlLabel, Box
 import React, { useContext } from 'react'
 import { grey, green } from '@mui/material/colors';
 import TinyEditor from './TinyEditor'
-import { DataStoreContext } from '../App'
+import { DataStoreContext, AlertContext } from '../App'
 import CloseIcon from '@mui/icons-material/Close';
 
 
@@ -17,10 +17,21 @@ export default function McqAnswer({
 }) {
 
 	const { DATA_STORE } = useContext(DataStoreContext);
+  const { setAlertText } = useContext(AlertContext);
+
 
 	const handleChange = (e, value) => {
-		answers[index].isCorrect = !answers[index].isCorrect
-		setAnswers([...answers])
+		const numCorrect = answers.filter( a => a.isCorrect)
+		const currentValue = answers[index].isCorrect
+
+		// Enforces atleast 1 correct answer
+		if (!currentValue || (currentValue && numCorrect.length > 1)) {
+			answers[index].isCorrect = !answers[index].isCorrect
+			setAlertText("")
+			setAnswers([...answers])
+		} else {
+			setAlertText("At least one answer must be marked as correct")
+		}
 	}
 
 	return (
@@ -28,23 +39,24 @@ export default function McqAnswer({
 			className={"mcq-answer-field"}
 		>
 			<Button
-					color='primary'
-					onClick={() => handleRemoveAnswer(idName)}
-					sx={{
-						height: '100%',
-						marginRight: '25px',
-						color: 'white',
-						minWidth: '0',
-						padding: '10px'
-					}}
-				>
-					<CloseIcon fontSize='medium'/>
-				</Button>
+				color='white'
+				onClick={() => handleRemoveAnswer(idName)}
+				sx={{
+					height: '100%',
+					marginRight: '25px',
+					color: 'white',
+					minWidth: '0',
+					padding: '10px'
+				}}
+			>
+				<CloseIcon fontSize='medium' />
+			</Button>
 			<Typography
+				variant='body2'
 				sx={{ color: 'white', display: 'inline' }}
 				className='answer-label'
 			>
-				{index+1}:
+				{index + 1}:
 			</Typography>
 			<TinyEditor
 				idName={idName}
@@ -54,21 +66,31 @@ export default function McqAnswer({
 			/>
 
 			<FormControlLabel
+				label={<Typography variant='body2'>Mark as correct</Typography>}
+				sx={{
+					'&.MuiTypography-root': {
+						color: '#fffff',
+					},
+				}}
 				control={
 					<Checkbox
 						checked={answers[index].isCorrect}
 						onChange={handleChange}
+						color='success'
+						style={{
+							color: green[600]
+						}}
 						sx={{
-							color: 'white',
+							'&.MuiCheckbox-root': {
+								color: 'white',
+								fontSize: '50px'
+							},
 							'&.Mui-checked': {
 								color: green[600],
 							},
 						}}
 					/>}
-				label="Mark as correct"
-				sx={{
-					color: 'white'
-				}}
+
 			>
 			</FormControlLabel>
 		</div>

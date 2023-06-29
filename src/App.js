@@ -42,7 +42,7 @@ function App() {
   const editorIds = useRef(['qEditor', 'answer1']);
   const [answers, setAnswers] = useState([{ id: 'answer1', isCorrect: true }])
   const [alertText, setAlertText] = useState('')
-
+  const [title, setTitle] = useState('')
 
   const handleDataChange = () => {
     setDataDirty(true)
@@ -72,7 +72,6 @@ function App() {
               <Collapse in={!!alertText} className='alert' >
                 <Alert
                   severity="error"
-
                   action={
                     <IconButton
                       aria-label="close"
@@ -85,9 +84,6 @@ function App() {
                       <CloseIcon fontSize="inherit" />
                     </IconButton>
                   }
-                // sx={{
-                //   display: alertText ? "flex" : "none"
-                // }}
                 >
                   {alertText}
                 </Alert>
@@ -98,8 +94,11 @@ function App() {
                   handleDataUpdated={() => setDataDirty(false)}
                   handleDataChange={() => setDataDirty(true)}
                 />
+
                 <div className='ques-details'>
-                  <QDetails />
+                  <QDetails
+                    {...{title, setTitle}}
+                  />
                 </div>
 
                 <Typography variant="h2" mb={3}>Question:</Typography>
@@ -127,7 +126,8 @@ function App() {
                     ))
                   }
                   <Button
-                    variant='text'
+                    variant='outlined'
+                    color='white'
                     onClick={handleAddAnswer}
                   >
                     Add answer

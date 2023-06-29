@@ -153,7 +153,7 @@ export default memo(function TinyEditor({idName}) {
         }}
 
       />
-      <button onClick={() => console.log(editorRef.current.getContent({ format: "raw" }))}>Log editor content</button>
+      {/* <button onClick={() => console.log(editorRef.current.getContent({ format: "raw" }))}>Log editor content</button> */}
     </>
   )
 })

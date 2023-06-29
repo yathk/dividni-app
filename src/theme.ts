@@ -12,18 +12,30 @@ declare module "@mui/material" {
   interface IconButtonPropsColorOverrides {
     white: true;
   }
+
+  interface TextFieldPropsColorOverrides {
+    white: true
+  }
+
+  interface ButtonPropsColorOverrides {
+    white: true
+  }
 }
 
 export const theme = createTheme({
   palette: {
-    primary: {
-      main: '#616161'
-    },
+    // primary: {
+    //   main: '#616161'
+    // },
     white: {
       main: '#ffffff'
     }
   },
   typography: {
+    body2: {
+      color: 'white',
+      fontSize: '16px'
+    },
     h2: {
       fontSize: '24px',
       color: 'white',

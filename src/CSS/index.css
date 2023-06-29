@@ -80,11 +80,11 @@ label .label-text {
   padding-left: 0;
 }
 
-input, input:focus, select, select:focus {
+/* input, input:focus, select, select:focus {
   border: none;
   background-color: white;
   outline: none;
-}
+} */
 
 #titleField {
   width: 400px;
