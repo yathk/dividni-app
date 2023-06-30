@@ -15,7 +15,8 @@ export default function PreviewDialog({ open, setIsOpen, title, answers }: Previ
 
 	const { editorIds, DATA_STORE } = useContext(DataStoreContext);
 	const [checkStatus, setCheckStatus] = useState<boolean[]>(answers.map(() => false))
-	const [quesHtml, setQuesHtml] = useState<string | undefined>(tinymce.get(editorIds.current[0])?.getContent())
+	const [answersHtmls, setAnswersHtmls] = useState<(string)[]>([])
+	const [quesHtml, setQuesHtml] = useState<string | undefined>(undefined)
 	const [variantChange, triggerVariantChange] = useState(false);
 	const theme = useTheme()
 
@@ -24,34 +25,57 @@ export default function PreviewDialog({ open, setIsOpen, title, answers }: Previ
 	}, [answers])
 
 	useEffect(() => {
-		const quesContent = tinymce.get(editorIds.current[0])?.getContent()
-		if (quesContent) {
-			const newHtml = injectVars(quesContent)
-			setQuesHtml(newHtml)
-		}
+		const qContent = tinymce.get(editorIds.current[0])?.getContent()
+		const contents: (string | undefined)[] = [qContent, ]
+
+		answers.forEach(answer => {
+			contents.push(tinymce.get(answer.id)?.getContent())
+		})
+		const variantHtmls = injectVars(contents)
+
+		setQuesHtml(variantHtmls[0])
+		setAnswersHtmls(variantHtmls.slice(1))
+
 	}, [open, variantChange])
 
-	const injectVars = (contentHtml: string) => {
-		const rootEl = document.createElement('div')
-		rootEl.innerHTML = contentHtml
-		rootEl.style.fontSize = '24px'
-		const varEls = rootEl.getElementsByClassName('variable') as HTMLCollectionOf<HTMLElement>
-		for (const varEl of varEls) {
-			const variable = DATA_STORE.getVariableById(varEl.getAttribute('varid'))
-			varEl.innerHTML = variable.preview()
-			varEl.style.border = 'none'
-			varEl.style.color = theme.palette.text.secondary
-			varEl.style.fontWeight = '400'
-			varEl.style.padding = '0'
-		}
-		return rootEl.innerHTML
+	const injectVars = (contents: (string | undefined)[]) => {
+		const output: string[] = []
+		const seenVars: {[key: string]: string} = {}
+		contents.forEach(contentHtml => {
+			if (contentHtml) {
+				const rootEl = document.createElement('div')
+				rootEl.innerHTML = contentHtml
+				const varEls = rootEl.getElementsByClassName('variable') as HTMLCollectionOf<HTMLElement>
+	
+				for (const varEl of varEls) {
+					const varId = varEl.getAttribute('varid')
+					if (varId) {
+						// Only get variant if variant hasn't already been fetched
+						// ...This means that the same variables will have the same variants.
+						if (!seenVars[varId]) {
+							const variable = DATA_STORE.getVariableById(varId)
+							seenVars[varId] = variable.preview()
+						}
+						// Remove all the styling, and make colour grey
+						varEl.className = "variable"
+						varEl.innerHTML = seenVars[varId]
+						varEl.style.border = 'none'
+						varEl.style.color = theme.palette.text.secondary
+						varEl.style.fontWeight = '400'
+						varEl.style.padding = '0'
+					}
+				}
+				output.push(rootEl.innerHTML)
+			} else {
+				output.push("")
+			}
+		})
+		return(output)
 	}
 
 	const handleVariantChange = () => {
 		triggerVariantChange(!variantChange)
 	}
-
-	const answersHtml = answers.map((a) => tinymce.get(a.id)?.getContent())
 
 	const handleClose = () => {
 		setIsOpen(false)
@@ -87,7 +111,7 @@ export default function PreviewDialog({ open, setIsOpen, title, answers }: Previ
 
 				<Stack py={6} px={6}>
 					{
-						answersHtml.map((answer, index) => (
+						answersHtmls.map((answer, index) => (
 							<FormControlLabel
 								key={index}
 								label={answer ?
