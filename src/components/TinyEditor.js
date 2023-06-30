@@ -1,12 +1,13 @@
 import BundledEditor from '../BundledEditor';
 import React, { useRef, useContext, useState, memo } from 'react';
 import { AlertContext, DataStoreContext, VAR_DECORATOR } from '../App';
-import { CHOICE_COLOUR, Variable } from '../model/Variable';
+import { CHOICE_COLOUR, RANDOM_COLOUR, Variable } from '../model/Variable';
 
 let varInstanceCount = 1;
- let varIdCount = 0;
+let varIdCount = 0;
+const VAR_MATCH_REGEX = /@([^@]*)@&nbsp;/
 
- export function getNewVarId() {
+export function getNewVarId() {
   return ++varIdCount
 }
 
@@ -17,7 +18,7 @@ function decodeHtml(html) {
   return txt.value;
 }
 
-export default memo(function TinyEditor({idName}) {
+export default memo(function TinyEditor({ idName }) {
 
   const { DATA_STORE, setDataStore } = useContext(DataStoreContext)
   const { setAlertText } = useContext(AlertContext)
@@ -28,7 +29,7 @@ export default memo(function TinyEditor({idName}) {
   const parseVars = () => {
     const contentHtml = editorRef.current.getDoc()
     DATA_STORE.syncInstances(contentHtml);
-    setDataStore({...DATA_STORE})
+    setDataStore({ ...DATA_STORE })
   }
 
   // Helper for getting id of exisitng vars
@@ -52,6 +53,7 @@ export default memo(function TinyEditor({idName}) {
     // Make sure all ids are unique (accounts for copy pasting)
     const seenIds = []
     const varEls = editor.dom.select('.variable')
+
     varEls.forEach(varEl => {
       const id = varEl.id
       if (seenIds.includes(id)) {
@@ -62,7 +64,7 @@ export default memo(function TinyEditor({idName}) {
 
     let content = editor.getContent({ format: "raw" })
     // Look for variables enclosed in @
-    const matchedText = content.match(/@([^@]*)@&nbsp;/)
+    const matchedText = content.match(VAR_MATCH_REGEX)
 
     if (matchedText) {
       // Get entered var name
@@ -80,7 +82,7 @@ export default memo(function TinyEditor({idName}) {
       const colour = variable ? variable.colour : CHOICE_COLOUR
 
       // Replace entered text with span marking variable
-      content = content.replace(/@([^@]*)@&nbsp;/, `
+      content = content.replace(VAR_MATCH_REGEX, `
       <span
         varid=${varId}
         id=instance${++varInstanceCount}
@@ -114,6 +116,35 @@ export default memo(function TinyEditor({idName}) {
           contextmenu: false,
           extended_valid_elements: 'span[id|style|class|varid|onclick]',
           setup: (editor) => {
+
+            const onAction = (autocompleteApi, rng, value) => {
+              editor.selection.setRng(rng);
+              editor.insertContent(`@${value}@ `);
+              autocompleteApi.hide();
+            };
+
+            const getMatchedChars = async (pattern) => {
+              pattern = pattern.toLowerCase().trim()
+              const varNames = DATA_STORE.getAllVariables()
+              const matchedVars = varNames.filter((v) => v.title.toLowerCase().includes(pattern));
+              return matchedVars.map(match => ({
+                type: 'autocompleteitem',
+                value: match.title,
+                text:  match.title,
+              }))
+            }
+
+            // editor.ui.registry.addIcon('choice', `<svg width="24px" height="24px" fill="${CHOICE_COLOUR}"><circle cx="50%" cy="50%" r="4"/></svg>`)
+            // editor.ui.registry.addIcon('random', `<svg width="24px" height="24px" fill="${RANDOM_COLOUR}"><circle cx="50%" cy="50%" r="4"/></svg>`)
+
+            // Autocompleter
+            editor.ui.registry.addAutocompleter('searchVars', {
+              trigger: '@',
+              minChars: 1,
+              columns: 1,
+              onAction: onAction,
+              fetch: (pattern) => getMatchedChars(pattern)
+            });
 
             // Renames all instances of a variable
             editor.addCommand('renameInstances', (ui, value) => {
