@@ -24,9 +24,9 @@ declare module "@mui/material" {
 
 export const theme = createTheme({
   palette: {
-    // primary: {
-    //   main: '#616161'
-    // },
+    primary: {
+      main: '#616161'
+    },
     white: {
       main: '#ffffff'
     }

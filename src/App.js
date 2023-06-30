@@ -20,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 import McqAnswer from './components/McqAnswer';
+import PreviewDialog from './components/PreviewDialog';
 import { Button } from '@mui/material';
 
 
@@ -43,17 +44,20 @@ function App() {
   const [answers, setAnswers] = useState([{ id: 'answer1', isCorrect: true }])
   const [alertText, setAlertText] = useState('')
   const [title, setTitle] = useState('')
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   const handleDataChange = () => {
     setDataDirty(true)
   }
 
   const handleAddAnswer = () => {
+    const newId = `answer${answers.length + 1}`
     answers.push({
-      id: `answer${answers.length + 1}`,
+      id: newId,
       isCorrect: false,
     })
     setAnswers([...answers])
+    editorIds.current.push(newId)
   }
 
   const handleRemoveAnswer = (answerId) => {
@@ -89,6 +93,14 @@ function App() {
                 </Alert>
               </Collapse>
               <div className='page-content-container'>
+
+              <PreviewDialog 
+                open={isPreviewOpen}
+                setIsOpen={setIsPreviewOpen}
+                title={title}
+                answers={answers}
+              />
+
                 <SideBar
                   datastore={DATA_STORE}
                   handleDataUpdated={() => setDataDirty(false)}
@@ -97,7 +109,8 @@ function App() {
 
                 <div className='ques-details'>
                   <QDetails
-                    {...{title, setTitle}}
+                    {...{title, setTitle, isPreviewOpen, setIsPreviewOpen}}
+                    
                   />
                 </div>
 

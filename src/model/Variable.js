@@ -164,4 +164,20 @@ export class Variable {
         console.log(`ERROR: ${newMulti} is not a number!`)
       }
     }
+
+    preview = () => {
+      const type = this.#type
+      switch (type) {
+        case 'choice':
+          if (this.#choices.length > 0) {
+            const randIndex = Math.floor(Math.random() * this.#choices.length)
+            return this.#choices[randIndex]
+          } else {
+            return "&lt;No choices defined&gt;"
+          }
+        case 'random':
+          const randNum = Math.floor(Math.random() * ((this.#max+1) - this.#min) + this.#min)
+          return randNum * this.#multiplier
+      }
+    }
 }

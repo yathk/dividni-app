@@ -48,8 +48,19 @@ export default memo(function TinyEditor({idName}) {
   // Wraps each var entered in a span with unique id
   const assignIds = () => {
     const editor = editorRef.current
-    let content = editor.getContent({ format: "raw" })
 
+    // Make sure all ids are unique (accounts for copy pasting)
+    const seenIds = []
+    const varEls = editor.dom.select('.variable')
+    varEls.forEach(varEl => {
+      const id = varEl.id
+      if (seenIds.includes(id)) {
+        varEl.setAttribute('id', `instance${++varInstanceCount}`)
+      }
+      seenIds.push(varEl.id)
+    })
+
+    let content = editor.getContent({ format: "raw" })
     // Look for variables enclosed in @
     const matchedText = content.match(/@([^@]*)@&nbsp;/)
 
@@ -75,7 +86,6 @@ export default memo(function TinyEditor({idName}) {
         id=instance${++varInstanceCount}
         style="color: ${colour}; font-weight: bold; border: 1px solid ${colour}; border-radius: 5px; padding: 0 5px;"
         class="variable mceNonEditable"
-        contenteditable="false"
       >${varName}</span>&nbsp;<span id="cursor-marker"></span>
       `)
 
@@ -135,6 +145,7 @@ export default memo(function TinyEditor({idName}) {
 
             // Dirty event is fired any time editor changes from previous save.
             editor.on('Dirty', (ev) => {
+              console.log('dirty fired ')
               assignIds();
               parseVars();
               editor.save();

@@ -4,12 +4,19 @@ import React, { Dispatch, SetStateAction } from 'react';
 interface QDetailsProps {
   title: string
   setTitle: Dispatch<SetStateAction<string>>
+  isPreviewOpen: boolean
+  setIsPreviewOpen: Dispatch<SetStateAction<boolean>>
+
 }
 
-export default function QDetails({ title, setTitle }: QDetailsProps) {
+export default function QDetails({ title, setTitle, setIsPreviewOpen }: QDetailsProps) {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setTitle(e.target.value)
+  }
+
+  const handlePreviewClick = () => {
+    setIsPreviewOpen(true)
   }
 
   return (
@@ -52,6 +59,7 @@ export default function QDetails({ title, setTitle }: QDetailsProps) {
             ml: '200px',
             px: '40px'
           }}
+          onClick={handlePreviewClick}
         >
           Preview
         </Button>
